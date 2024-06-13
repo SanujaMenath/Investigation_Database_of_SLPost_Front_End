@@ -1,11 +1,6 @@
 // src/pages/InvestigationDetails.tsx
 
-import React, {
-  HtmlHTMLAttributes,
-  LegacyRef,
-  MutableRefObject,
-  useState,
-} from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   createInvestigation,
@@ -13,7 +8,7 @@ import {
 } from "../services/api";
 import Button from "../components/UI/Button";
 import { Calendar } from "react-ionicons";
-import { InvestigationInspector } from "../@types/api";
+import { InvestigationInspector, Suspector } from "../@types/api";
 
 const Investigation: React.FC = () => {
   const { t } = useTranslation();
@@ -28,6 +23,7 @@ const Investigation: React.FC = () => {
     suspects: string;
     interimReportId: string;
     dateOfInterimReportIssued: string;
+    appealedAcceptedOrRejected: string;
     dateOfFinalReportIssued: string;
     recommendationOfFinalReport: string;
     personWhoAcceptedSubmission: string;
@@ -46,6 +42,7 @@ const Investigation: React.FC = () => {
     suspects: "",
     interimReportId: "",
     dateOfInterimReportIssued: "",
+    appealedAcceptedOrRejected: "",
     dateOfFinalReportIssued: "",
     recommendationOfFinalReport: "",
     personWhoAcceptedSubmission: "",
@@ -57,6 +54,11 @@ const Investigation: React.FC = () => {
   const [suspectFormIndexArray, setSuspectFormIndexArray] = React.useState<
     Array<number>
   >([]);
+
+  const [suspectorList, setSuspectorList] = React.useState<Array<Suspector>>();
+  const [isSuspectorListAdded, setIsSuspectorListAdded] =
+    React.useState<boolean>(false);
+  const handleSuspectorList = () => {};
 
   const [investigationInspectorList, setInvestigationInspectorList] =
     React.useState<Array<InvestigationInspector>>();
@@ -82,11 +84,23 @@ const Investigation: React.FC = () => {
     await createInvestigation(formData);
   };
 
-  console.log("Need " + suspectorCount + " to be added");
+  console.log("Current Suspector List", suspectorList);
 
   React.useEffect(() => {
     const array = new Array(suspectorCount ? suspectorCount : 0).fill(1);
     setSuspectFormIndexArray(array);
+    suspectFormIndexArray.forEach((form, index) => {
+      const suspector: Suspector = {
+        id: index * form,
+        name: "",
+        dob: "",
+        nic: "",
+      };
+
+      setSuspectorList(
+        suspectorList ? [...suspectorList, suspector] : [suspector]
+      );
+    });
   }, [suspectorCount]);
 
   React.useEffect(() => {
@@ -121,10 +135,10 @@ const Investigation: React.FC = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white"
+        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl"
       >
         {/* Mandatory Fields */}
-        <div id="mandatoryFields" className="flex flex-col w-1/2 gap-2">
+        <div id="mandatoryFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
             {t("Mandatory Fields")}
           </h1>
@@ -196,7 +210,7 @@ const Investigation: React.FC = () => {
         </div>
 
         {/* Investigation Inspector Fields */}
-        <div id="investigationFields" className="flex flex-col w-1/2 gap-2">
+        <div id="investigationFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
             {t("Investigation Inspector")}
           </h1>
@@ -231,7 +245,7 @@ const Investigation: React.FC = () => {
         </div>
 
         {/* Suspector Fields */}
-        <div id="suspectorFields" className="flex flex-col w-1/2 gap-2">
+        <div id="suspectorFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
             {t("Suspector")}
           </h1>
@@ -243,8 +257,12 @@ const Investigation: React.FC = () => {
             >
               <input
                 className="border border-[#4a4a4a]/30 ml-2 rounded-md"
-                onChange={(e) => setSuspectorCount(parseInt(e.target.value))}
+                onChange={(e) => {
+                  setSuspectorCount(parseInt(e.target.value));
+                  suspectFormIndexArray;
+                }}
                 type="number"
+                min="0"
                 placeholder="Enter Count"
               />
             </div>
@@ -253,40 +271,103 @@ const Investigation: React.FC = () => {
           <div id="supectorFormGeneration" className="flex flex-col gap-2">
             {suspectFormIndexArray.length > 0 &&
               suspectFormIndexArray.map((i, index) => {
+                const _id = i * index;
+                const currentSuspector = suspectorList?.find(
+                  (sus) => sus.id == _id
+                );
                 return (
-                  <form key={index * i} className="flex flex-col">
-                    <div className="">
-                      <label htmlFor="nic">{t("NIC")}:</label>
-                      <input
-                        id="nic"
-                        type="text"
-                        className="border border-gray-400"
-                      />
+                  <div key={index * i} className="flex flex-col">
+                    <div className="border border-double ">
+                      <div>
+                        <input
+                          id="nic"
+                          type="text"
+                          required
+                          className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 w-1/2 !outline-none rounded-lg m-2"
+                          placeholder={t("NIC")}
+                          onChange={(e) => {
+                            const thisSuspector: Suspector = {
+                              id: _id,
+                              nic: e.target.value, // This
+                              dob: currentSuspector?.dob!,
+                              name: currentSuspector?.name!,
+                            };
+                            setSuspectorList(
+                              suspectorList
+                                ? [
+                                    ...suspectorList.filter(
+                                      (fil) => fil.id != _id
+                                    ),
+                                    thisSuspector,
+                                  ]
+                                : [thisSuspector]
+                            );
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <input
+                          id="name"
+                          type="text"
+                          required
+                          className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 w-1/2 !outline-none rounded-lg m-2"
+                          placeholder={t("Name")}
+                          onChange={(e) => {
+                            const thisSuspector: Suspector = {
+                              id: _id,
+                              nic: currentSuspector?.nic!,
+                              dob: currentSuspector?.dob!,
+                              name: e.target.value, // This
+                            };
+                            setSuspectorList(
+                              suspectorList
+                                ? [
+                                    ...suspectorList.filter(
+                                      (fil) => fil.id != _id
+                                    ),
+                                    thisSuspector,
+                                  ]
+                                : [thisSuspector]
+                            );
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <input
+                          id="dob"
+                          required
+                          type="date"
+                          className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 w-1/2 !outline-none rounded-lg m-2"
+                          placeholder={t("DOB")}
+                          onChange={(e) => {
+                            const thisSuspector: Suspector = {
+                              id: _id,
+                              nic: currentSuspector?.nic!,
+                              dob: e.target.value, // this
+                              name: currentSuspector?.dob!,
+                            };
+                            setSuspectorList(
+                              suspectorList
+                                ? [
+                                    ...suspectorList.filter(
+                                      (fil) => fil.id != _id
+                                    ),
+                                    thisSuspector,
+                                  ]
+                                : [thisSuspector]
+                            );
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <label htmlFor="name">{t("Name")}:</label>
-                      <input
-                        id="name"
-                        type="text"
-                        className="border border-gray-400"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="dob">{t("DOB ")}:</label>
-                      <input
-                        id="dob"
-                        type="date"
-                        className="border border-gray-400"
-                      />
-                    </div>
-                  </form>
+                  </div>
                 );
               })}
           </div>
         </div>
 
         {/* Interim Report Fields */}
-        <div id="interimReportFields" className="flex flex-col w-1/2 gap-2">
+        <div id="interimReportFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
             {t("Interim Report")}
           </h1>
@@ -298,87 +379,134 @@ const Investigation: React.FC = () => {
               className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
               value={formData.interimReportId}
               onChange={handleChange}
-              placeholder={t("Interim Repor tId")}
+              placeholder={t("Interim Report Id")}
             />
           </div>
 
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              name="dateOfInterimReportIssued"
+          <div className="flex flex-col space-y-2 w-full">
+            <textarea
+              name="recommendationOfInterimReport"
               className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              value={formData.dateOfInterimReportIssued}
               onChange={handleChange}
-              placeholder={t("Interim Repor tId")}
+              placeholder={t("Recommendation Of Interim Report")}
             />
           </div>
         </div>
 
         {/* Formal Inquiry Fields */}
-        <div id="formalInquiryFields" className="flex flex-col w-1/2 gap-2">
+        <div id="formalInquiryFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
             {t("Formal Inquiry")}
           </h1>
+
+          <div className="flex flex-col space-y-2 w-1/2">
+            <input
+              type="text"
+              name="formalInquiryId"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+              value={formData.interimReportId}
+              onChange={handleChange}
+              placeholder={t("Formal Inquiry Id")}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-2 w-full">
+            <textarea
+              name="recommendationOfIO"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-auto h-full resize-none"
+              value={formData.recommendationOfFinalReport}
+              onChange={handleChange}
+              placeholder={t("Recommendation Of Investigation Officer")}
+            />
+          </div>
         </div>
 
         {/* Charge Sheet Fields */}
-        <div id="chargeSheetFields" className="flex flex-col w-1/2 gap-2">
+        <div id="chargeSheetFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
             {t("Charge Sheet")}
           </h1>
+
+          <div className="flex flex-col space-y-2 w-1/2">
+            <input
+              type="text"
+              name="chargeSheetId"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+              value={formData.interimReportId}
+              onChange={handleChange}
+              placeholder={t("Charge Sheet Id")}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col space-y-2 w-full">
+          <div
+            className={`relative border border-[#4a4a4a]/30 px-3 w-1/2 py-2 bg-[#4a4a4a]/5 rounded-lg m-2 ${
+              formData.appealedAcceptedOrRejected
+                ? "text-[#4a4a4a]"
+                : "text-[#4a4a4a]/50"
+            } cursor-default`}
+          >
+            <select
+              name="appealedAcceptedOrRejected"
+              id="appealedAcceptedOrRejected"
+              className="w-full bg-transparent outline-none appearance-none"
+              onChange={handleChange}
+              value={formData.appealedAcceptedOrRejected}
+            >
+              <option value="" selected disabled>
+                {t("Appealed Accepted Or Rejected")}
+              </option>
+              <option value="accepted">{t("Accepted")}</option>
+              <option value="rejected">{t("Rejected")}</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col space-y-2 w-full">
+            <textarea
+              name="recommendationOfFinalReport"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full h-full resize-none"
+              value={formData.recommendationOfFinalReport}
+              onChange={handleChange}
+              placeholder={t("Recommendation Of Final Report")}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-2 w-full ">
+            <input
+              type="text"
+              name="personWhoAcceptedSubmission"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-1/2"
+              value={formData.personWhoAcceptedSubmission}
+              onChange={handleChange}
+              placeholder={t("Person Who Accepted Submission")}
+              required
+            />
+          </div>
+
+          <div
+            id="statusFields"
+            className="flex flex-col space-y-2  w-1/2 gap-2"
+          >
+            <select
+              name="status"
+              id="status"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+              onChange={handleChange}
+              value={formData.status}
+            >
+              <option value="" selected disabled>
+                {t("Select Status")}
+              </option>
+              <option value="onGoing">{t("On-Going")}</option>
+              <option value="closed">{t("Closed with Charge Sheet")}</option>
+              <option value="putAway">{t("Putaway")}</option>
+            </select>
+          </div>
         </div>
 
         {/* <div className="flex flex-col gap-8">
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="fileId">{t("File Number")}:</label>
-            <input
-              type="text"
-              name="fileId"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.fileId}
-              onChange={handleChange}
-              placeholder={t("File Number")}
-              required
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="incident">{t("Incident")}:</label>
-            <input
-              type="text"
-              name="incident"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.incident}
-              onChange={handleChange}
-              placeholder={t("Incident")}
-              required
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="incidentDate">{t("Incident Date")}:</label>
-            <input
-              type="date"
-              name="incidentDate"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.incidentDate}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="dateReferredToInvestigate">
-              {t("Date Referred To Investigate")}:
-            </label>
-            <input
-              type="date"
-              name="dateReferredToInvestigate"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.dateReferredToInvestigate}
-              onChange={handleChange}
-            />
-          </div>
-
+         
           <div className="flex flex-col space-y-2">
             <label htmlFor="investigationInspector">
               {t("Investigation Inspector")}:
@@ -497,15 +625,7 @@ const Investigation: React.FC = () => {
             />
           </div>
 
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="interimReportId ">{t("Interim Report Id")}:</label>
-            <input
-              type="text"
-              name="interimReportId"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
+         
 
           <div className="flex flex-col space-y-2">
             <label htmlFor="dateOfInterimReportIssued ">
@@ -519,17 +639,7 @@ const Investigation: React.FC = () => {
             />
           </div>
 
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="recommendationOfInterimReport">
-              {t("Recommendation Of Interim Report")}:
-            </label>
-            <input
-              type="text"
-              name="recommendationOfInterimReport"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
+      
 
           <div className="flex flex-col space-y-2">
             <label htmlFor="interdictedDate">{t("Interdicted Date")}:</label>
@@ -606,21 +716,7 @@ const Investigation: React.FC = () => {
               onChange={handleChange}
             />
           </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="recommendationOfFinalReport">
-              {t("Recommendation Of Final Report")}:
-            </label>
-
-            <textarea
-              name="recommendationOfFinalReport"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.recommendationOfFinalReport}
-              onChange={handleChange}
-              placeholder={t("Recommendation Of Final Report")}
-            />
-          </div>
-
+          
           <div className="flex flex-col space-y-2">
             <label htmlFor="personWhoAcceptedSubmission">
               {t("Person Who Accepted Submission")}:

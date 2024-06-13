@@ -9,7 +9,7 @@ interface CustomButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: React.FC<CustomButtonProps> = ({ children, ...props }) => {
   const sizes = {
     small: 2,
-    medium: 5,
+    medium:  5,
     large: 10,
   };
 
