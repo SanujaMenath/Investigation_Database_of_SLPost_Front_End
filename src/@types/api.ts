@@ -10,3 +10,13 @@ export type Suspector = {
   name: string;
   dob: string;
 };
+
+export type IIAssigmentDTO = {
+  caseNo: string;
+  investigation?: string;
+  inspector: string;
+  acquiredDate: string;
+  submittedDate?: string;
+  reacquiredDate?: string;
+  resubmittedDate?: string;
+};

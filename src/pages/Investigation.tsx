@@ -1,8 +1,9 @@
 // src/pages/InvestigationDetails.tsx
 
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  createIIAssignment,
   createInvestigation,
   getInvestigationInspectors,
 } from "../services/api";
@@ -58,6 +59,20 @@ const Investigation: React.FC = () => {
   const [suspectorList, setSuspectorList] = React.useState<Array<Suspector>>();
   const [isSuspectorListAdded, setIsSuspectorListAdded] =
     React.useState<boolean>(false);
+  const [investigationInspectorNICs, setInvestigationInspectorNICs] =
+    React.useState<Array<{ name: string; nic: string; isAssigned: boolean }>>(
+      []
+    );
+  const [isIIDropdownLocked, setIsIIDropdownLocked] =
+    React.useState<boolean>(false);
+
+  // States for updating the Investigator Assigments
+  const [caseNoII, setCaseNoII] = React.useState<string>();
+  const [acquiredDateII, setAquiredDateII] = React.useState<string>();
+  const [submittedDateII, setSubmittedDateII] = React.useState<string>();
+  const [reAcquiredDateII, setReAquiredDateII] = React.useState<string>();
+  const [reSubmittedDateII, setReSubmittedDateII] = React.useState<string>();
+
   const handleSuspectorList = () => {};
 
   const [investigationInspectorList, setInvestigationInspectorList] =
@@ -84,7 +99,7 @@ const Investigation: React.FC = () => {
     await createInvestigation(formData);
   };
 
-  console.log("Current Suspector List", suspectorList);
+  console.log("Investigator Selected: ", investigationInspectorNICs);
 
   React.useEffect(() => {
     const array = new Array(suspectorCount ? suspectorCount : 0).fill(1);
@@ -114,16 +129,66 @@ const Investigation: React.FC = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const focusDatePicker = () => {
-    if (dateReferredToInvestigateRef.current) {
-      dateReferredToInvestigateRef.current.focus();
-      dateReferredToInvestigateRef.current.showPicker();
+  const focusDatePicker = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e.currentTarget) {
+      e.currentTarget.focus();
+      e.currentTarget.showPicker();
     }
   };
 
   const handleDatePicker = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDateRefferedToInvestigate(event.target.value);
   };
+
+  const handleChangeInvestigationInspectorNICs = (
+    e: ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedOption = e.target.value;
+    if (selectedOption) {
+      const innerTextArray = selectedOption.split(","); // Assume text format is "name,nic"
+      const _investigator = {
+        name: innerTextArray[0].trim(),
+        nic: innerTextArray[1].trim(),
+        isAssigned: false,
+      };
+
+      // Check if the investigator is already in the array
+      const exists = investigationInspectorNICs.some(
+        (investigator) =>
+          investigator.name === _investigator.name &&
+          investigator.nic === _investigator.nic
+      );
+
+      if (exists) {
+        return;
+      }
+
+      setInvestigationInspectorNICs((prevData) => [...prevData, _investigator]);
+      setIsIIDropdownLocked(true);
+    }
+  };
+
+  const handleIIAssignmentForAddedInvestigator = async () => {
+    try {
+      const inspectorAssignmentToAdd = {
+        caseNo: caseNoII!,
+        investigation: "",
+        inspector: investigationInspectorNICs[investigationInspectorNICs.length - 1].nic,
+        acquiredDate: acquiredDateII!,
+        submittedDate: submittedDateII,
+        reacquiredDate: reAcquiredDateII,
+        resubmittedDate: reSubmittedDateII 
+      }
+
+      const _ = await createIIAssignment(inspectorAssignmentToAdd)
+    } catch (error) {
+      console.log("Error in handleIIAssignmentForAddedInvestigator: ", error)
+    }
+  }
+
+  const handleDeletePreviouslyAddedAssigmentForInvestigator = async() => {
+
+  }
 
   return (
     <div className="font-normal">
@@ -211,36 +276,119 @@ const Investigation: React.FC = () => {
 
         {/* Investigation Inspector Fields */}
         <div id="investigationFields" className="flex flex-col w-full gap-2">
-          <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
+          <h1 className="text-lg text-[#4a4a4a] font-medium ml-2 flex items-center">
             {t("Investigation Inspector")}
           </h1>
-          <div className="flex flex-wrap items-center justify-between">
-            <div className="flex flex-col space-y-2 w-1/2">
+          <div className="flex items-center gap-1 flex-wrap">
+            {investigationInspectorNICs.map((inv) => (
+              <div
+                key={inv.nic}
+                className={`p-1 px-6 ${
+                  inv.isAssigned ? "bg-green-500" : "bg-orange-500"
+                } text-xs rounded-xl ml-2 mt-1 text-white`}
+              >
+                {inv.name} : {inv.nic}
+              </div>
+            ))}
+          </div>
+          <div className="flex w-full items-start justify-between">
+            <div className="flex flex-col space-y-2 w-1/2 justify-start">
               <select
                 name="selectInspector"
                 id="selectInspector"
                 className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+                onChange={handleChangeInvestigationInspectorNICs}
+                disabled={isIIDropdownLocked}
               >
                 <option value={undefined} selected disabled>
                   Select from here
                 </option>
                 {investigationInspectorList?.map((each) => {
+                  const investigator = [each.name, each.nic];
+
                   return (
-                    <option key={each.nic} value={each.nic}>
+                    <option key={each.nic} value={investigator}>
                       {each.name}
                     </option>
                   );
                 })}
               </select>
 
-              <Button
-                size="medium"
-                type="button"
-                className="bg-[#5964e6]/20 text-[#5964e6] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
-              >
-                Add New
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  size="medium"
+                  type="button"
+                  className="bg-[#5964e6]/20 text-[#5964e6] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
+                  onClick={() => setIsIIDropdownLocked(false)}
+                >
+                  Add New
+                </Button>
+                <Button
+                  size="medium"
+                  type="button"
+                  className="bg-[#e65959]/20 text-[#e65959] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
+                  onClick={() => setInvestigationInspectorNICs([])}
+                >
+                  Clear
+                </Button>
+              </div>
             </div>
+            {investigationInspectorNICs.length > 0 && <div className="flex flex-col space-y-2 w-1/2">
+              <div className="w-full">
+              <input
+                className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
+                type="text"
+                placeholder="Case No"
+                value={caseNoII}
+                onChange={(e)=> setCaseNoII(e.target.value)}
+                required
+              />
+              <input
+                className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
+                type="date"
+                placeholder="Acquired Date"
+                onChange={(e)=> setAquiredDateII(e.target.value)}
+                required
+              />
+              <input
+                className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
+                type="date"
+                placeholder="Submitted Date"
+                onChange={(e)=> setSubmittedDateII(e.target.value)}
+              />
+              <input
+                className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
+                type="date"
+                placeholder="Reacquired Date"
+                onChange={(e)=> setReAquiredDateII(e.target.value)}
+              />
+              <input
+                className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
+                type="date"
+                placeholder="Resubmitted Date"
+                onChange={(e)=> setReSubmittedDateII(e.target.value)}
+              />
+              </div>
+
+              <div className="flex items-center gap-2">
+              <Button
+                  size="medium"
+                  type="button"
+                  className="bg-[#5964e6]/20 text-[#5964e6] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
+                  onClick={handleIIAssignmentForAddedInvestigator}
+                >
+                  Update
+                </Button>
+                <Button
+                  size="medium"
+                  type="button"
+                  className="bg-[#e65959]/20 text-[#e65959] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
+                  onClick={handleDeletePreviouslyAddedAssigmentForInvestigator}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>}
           </div>
         </div>
 
@@ -383,6 +531,16 @@ const Investigation: React.FC = () => {
             />
           </div>
 
+          <div className=" space-y-2 w-full ml-3">
+            <label htmlFor="interdictedDate">{t("Interdicted Date ")}:</label>
+            <input
+              type="date"
+              name="interdictedDate"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
+              onChange={handleChange}
+            />
+          </div>
+
           <div className="flex flex-col space-y-2 w-full">
             <textarea
               name="recommendationOfInterimReport"
@@ -462,6 +620,52 @@ const Investigation: React.FC = () => {
             </select>
           </div>
 
+          <div className=" space-y-2 w-full ml-3">
+            <label htmlFor="dateOfRestateForAppealed">
+              {t("Date Of Restate For Appealed ")}:
+            </label>
+            <input
+              type="date"
+              name="dateOfRestateForAppealed"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg  "
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-2 w-full">
+            <textarea
+              name="recommendationOfInterimReport"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+              onChange={handleChange}
+              placeholder={t("Recommendation Of Interim Report")}
+            />
+          </div>
+
+          <div className="space-y-2 w-full ml-3">
+            <label htmlFor="dateOfFinalReportIssued">
+              {t("Date Of Final Report Issued ")}:
+            </label>
+            <input
+              type="date"
+              name="dateOfFinalReportIssued"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-1 "
+              value={formData.dateOfFinalReportIssued}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="space-y-2 w-full ml-3">
+            <label htmlFor="dateOfFinalOrderThatInformedToAccused">
+              {t("Date Of Final Order that Informed to Accused ")}:
+            </label>
+            <input
+              type="date"
+              name="dateOfFinalOrderThatInformedToAccused"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10"
+              onChange={handleChange}
+            />
+          </div>
+
           <div className="flex flex-col space-y-2 w-full">
             <textarea
               name="recommendationOfFinalReport"
@@ -481,6 +685,44 @@ const Investigation: React.FC = () => {
               onChange={handleChange}
               placeholder={t("Person Who Accepted Submission")}
               required
+            />
+          </div>
+
+          <div className="space-y-2 w-full ml-3">
+            <label htmlFor="acceptedSubmissionDate">
+              {t("Accepted Submission Date")}:
+            </label>
+            <input
+              type="date"
+              name="acceptedSubmissionDate"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10"
+              value={formData.acceptedSubmissionDate}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="space-y-2 w-full ml-3">
+            <label htmlFor="handOveredDateOfSubmission">
+              {t("Hand Overed Date Of Submission")}:
+            </label>
+            <input
+              type="date"
+              name="handOveredDateOfSubmission"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10"
+              value={formData.handOveredDateOfSubmission}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="space-y-2 w-full ml-3">
+            <label htmlFor="dateOfAppealedForReinstate">
+              {t("Date Of Appealed For Reinstate")}:
+            </label>
+            <input
+              type="date"
+              name="dateOfAppealedForReinstate"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10"
+              onChange={handleChange}
             />
           </div>
 
@@ -507,18 +749,7 @@ const Investigation: React.FC = () => {
 
         {/* <div className="flex flex-col gap-8">
          
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="investigationInspector">
-              {t("Investigation Inspector")}:
-            </label>
-            <input
-              type="text"
-              name="investigationInspector"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.investigationInspector}
-              onChange={handleChange}
-            />
-          </div>
+         
 
           <div className="flex flex-col space-y-2">
             <label htmlFor="caseNoOfII">
@@ -580,200 +811,7 @@ const Investigation: React.FC = () => {
               onChange={handleChange}
             />
           </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="addNewSuspectors">{t("Suspectors")}:</label>
-            <div
-              className="flex items-center justify-between w-1/2"
-              id="addNewSuspectors"
-            >
-              <input
-                className="w-20"
-                onChange={(e) => setSuspectorCount(parseInt(e.target.value))}
-                type="number"
-              />
-            </div>
-          </div>
-
-          <div id="supectorFormGeneration" className="flex flex-col gap-2">
-            {suspectFormIndexArray.length > 0 &&
-              suspectFormIndexArray.map((i, index) => {
-                return (
-                  <form key={index * i} className="flex flex-col">
-                    <div className="">
-                      <label htmlFor="nic">{t("NIC")}:</label>
-                      <input id="nic" type="text" />
-                    </div>
-                    <div>
-                      <label htmlFor="name">{t("Name")}:</label>
-                      <input id="name" type="text" />
-                    </div>
-                  </form>
-                );
-              })}
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="suspectorsDOB">
-              {t("Suspector's Date Of Birth")}:
-            </label>
-            <input
-              type="date"
-              name="suspectorsDOB"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
-
-         
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="dateOfInterimReportIssued ">
-              {t("Date of Interim Report Issued")}:
-            </label>
-            <input
-              type="date"
-              name="dateOfInterimReportIssued"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
-
-      
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="interdictedDate">{t("Interdicted Date")}:</label>
-            <input
-              type="date"
-              name="interdictedDate"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="dateOfAppealedForReinstate">
-              {t("Date Of Appealed For Reinstate")}:
-            </label>
-            <input
-              type="date"
-              name="dateOfAppealedForReinstate"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="appealedAcceptedOrRejected">
-              {t("Appealed Accepted Or Rejected")}:
-            </label>
-            <select
-              name="appealedAcceptedOrRejected"
-              id="appealedAcceptedOrRejected"
-              className="border border-red-500 p-2 w-1/2"
-            >
-              <option value="Select" selected disabled>
-                Select
-              </option>
-              <option value="accepted">Accepted</option>
-              <option value="rejected">Rejected</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="dateOfRestateForAppealed">
-              {t("Date Of Restate For Appealed ")}:
-            </label>
-            <input
-              type="date"
-              name="dateOfRestateForAppealed"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="dateOfFinalOrderThatInformedToAccused">
-              {t("Date Of Final Order that Informed to Accused ")}:
-            </label>
-            <input
-              type="date"
-              name="dateOfFinalOrderThatInformedToAccused"
-              className="border border-red-500 p-2 w-1/2"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="dateOfFinalReportIssued">
-              {t("Date Of Final Report Issued")}:
-            </label>
-            <input
-              type="date"
-              name="dateOfFinalReportIssued"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.dateOfFinalReportIssued}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="personWhoAcceptedSubmission">
-              {t("Person Who Accepted Submission")}:
-            </label>
-            <input
-              type="text"
-              name="personWhoAcceptedSubmission"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.personWhoAcceptedSubmission}
-              onChange={handleChange}
-              placeholder={t("Person Who Accepted Submission")}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="acceptedSubmissionDate">
-              {t("Accepted Submission Date")}:
-            </label>
-            <input
-              type="date"
-              name="acceptedSubmissionDate"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.acceptedSubmissionDate}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="handOveredDateOfSubmission">
-              {t("Hand Overed Date Of Submission")}:
-            </label>
-            <input
-              type="date"
-              name="handOveredDateOfSubmission"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.handOveredDateOfSubmission}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="status">{t("Select the Status")}:</label>
-            <select
-              name="status"
-              id="status"
-              className="border border-red-500 p-2 w-1/2"
-              value={formData.status}
-              onChange={handleChange}
-            >
-              <option value="selectStatus" disabled selected>
-                {t("Select Status")}
-              </option>
-              <option value="onGoing">{t("On-Going")}</option>
-              <option value="closed">{t("Closed with Charge Sheet")}</option>
-              <option value="putAway">{t("Putaway")}</option>
-            </select>
-          </div>
+  
         </div> */}
 
         <Button type="submit" size="medium">

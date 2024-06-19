@@ -1,6 +1,6 @@
 import axios from "axios";
 import { convertMillisecondsToLocalDateTime } from "../utils/date";
-import { InvestigationInspector } from "../@types/api";
+import { IIAssigmentDTO, InvestigationInspector } from "../@types/api";
 
 const baseUrl = "http://localhost:8080";
 
@@ -200,5 +200,44 @@ export const getInvestigationInspectors = async (): Promise<
     return res.data;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const createIIAssignment = async (assignment: IIAssigmentDTO) => {
+  try {
+    const investigatorData: IIAssigmentDTO = {
+      caseNo: assignment.caseNo,
+      inspector: assignment.inspector,
+      investigation: assignment.investigation,
+      acquiredDate: convertMillisecondsToLocalDateTime(
+        Date.parse(assignment.acquiredDate)
+      ),
+      reacquiredDate: convertMillisecondsToLocalDateTime(
+        Date.parse(assignment.reacquiredDate ? assignment.reacquiredDate : "0")
+      ),
+      submittedDate: convertMillisecondsToLocalDateTime(
+        Date.parse(assignment.submittedDate ? assignment.submittedDate : "0")
+      ),
+      resubmittedDate: convertMillisecondsToLocalDateTime(
+        Date.parse(
+          assignment.resubmittedDate ? assignment.resubmittedDate : "0"
+        )
+      ),
+    };
+
+    const reqUrl = `${baseUrl}/api/assignments`;
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    const res = await fetch(reqUrl, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(investigatorData),
+    });
+
+    if (res.status == 200) alert("II Added");
+    else alert("II not added");
+  } catch (error) {
+    console.log(error);
   }
 };

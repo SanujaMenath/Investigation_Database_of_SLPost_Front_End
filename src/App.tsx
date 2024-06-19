@@ -11,32 +11,32 @@ import UpdateInv from "./pages/UpdateInv";
 import UpdateInterimReport from "./pages/UpdateInterimReport";
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Root />,
-      children: [
-        { index: true, element: <Home /> },
-        { path: "/new-investigation", element: <Investigation /> },
-        { path: "/update-investigation", element: <UpdateInv /> },
-        {
-          path: "/update-investigation/update-interim-report",
-          element: <UpdateInterimReport />,
-        },
-        { path: "/search", element: <Search /> },
-        { path: "/contact", element: <Contact /> },
-        { path: "/login", element: <Login /> },
-      ],
-    },
-  ]);
+const router = createBrowserRouter([
+{
+path: "/",
+element: <Root />,
+children: [
+{ index: true, element: <Home /> },
+{ path: "/new-investigation", element: <Investigation /> },
+{ path: "/update-investigation", element: <UpdateInv /> },
+{
+path: "/update-investigation/update-interim-report",
+element: <UpdateInterimReport />,
+},
+{ path: "/search", element: <Search /> },
+{ path: "/contact", element: <Contact /> },
+{ path: "/login", element: <Login /> },
+],
+},
+]);
 
-  return (
-    <React.StrictMode>
-      <main className="font-sans">
-        <RouterProvider router={router} />
-      </main>
-    </React.StrictMode>
-  );
+return (
+<React.StrictMode>
+<main className="font-sans">
+<RouterProvider router={router} />
+</main>
+</React.StrictMode>
+);
 }
 
 export default App;
