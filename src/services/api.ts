@@ -4,16 +4,53 @@ import { IIAssigmentDTO, InvestigationInspector } from "../@types/api";
 
 const baseUrl = "http://localhost:8080";
 
-type InvestigationProps = {
+export type InvestigationProps = {
   fileId: string;
   incident: string;
   incidentDate: string;
   dateReferredToInvestigate: string;
+  investigationInspector: string;
+
+  suspectors: { name: string; nic: string; dob: string }[];
+
+  interimReports: {
+    interimReportId: string;
+    interdictedDate: string;
+    recommendationOfInterimReport: string;
+    dateOfInterimReportIssued: string;
+  }[];
+
+  formalInquries: {
+    formalInquiryId: string;
+    recommendationOfIO: string;
+    dateOfAppoint: string;
+    startedDate: string;
+    endDate: string;
+    dateOfRecommendation: string;
+  }[];
+
+  investigationInspectors: {
+    nic: string;
+    caseNo: string;
+    acquiredDate: string;
+    submittedDate: string;
+    reAcquiredDate: string;
+    reSubmittedDate: string;
+  }[];
+
+  chargeSheet: {
+    chargeSheetId: string;
+    appealedAcceptedOrRejected: string;
+    dateOfRestateForAppealed: string;
+  }[];
+
   dateOfFinalReportIssued: string;
   recommendationOfFinalReport: string;
   personWhoAcceptedSubmission: string;
   acceptedSubmissionDate: string;
   handOveredDateOfSubmission: string;
+  dateOfFinalOrderThatInformedToAccused:string;
+  dateOfAppealedForReinstate:string;
   status: string;
 };
 
