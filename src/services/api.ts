@@ -40,10 +40,21 @@ export type InvestigationProps = {
 
   chargeSheet: {
     chargeSheetId: string;
-    appealedAcceptedOrRejected: string;
-    dateOfRestateForAppealed: string;
+    chargeSheetIssuedDate: string;
+    dateOfAnswered:string;
+    dateOfPersonalFileCalled:string;
+    dateOfPersonalReturned:string;
+    dateOfDisciplinaryOrderTaken:string;
+    dateOfAppealedForPSC:string;
+    pscOrderDescription:string;
+    dateOfPSCOrderTaken:string;
+    dateOfAppealedToAAT:string;
+    dateOfAATOrderTaken:string;
+    aatOrderDescription:string;
   }[];
 
+  appealedAcceptedOrRejected: string;
+  dateOfRestateForAppealed: string;
   dateOfFinalReportIssued: string;
   recommendationOfFinalReport: string;
   personWhoAcceptedSubmission: string;
@@ -53,6 +64,12 @@ export type InvestigationProps = {
   dateOfAppealedForReinstate:string;
   status: string;
 };
+
+export type InvInspectorProps ={
+  name:string;
+  nic:string;
+};
+
 
 export const createInvestigation = async ({
   fileId,

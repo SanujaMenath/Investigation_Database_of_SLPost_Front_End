@@ -43,5 +43,8 @@
   "On-Going": "On-Going",
   "Closed with Charge Sheet": "Closed with Charge Sheet",
   "Putaway": "Putaway",
-  "Submit": "Submit"
+  "Submit": "Submit",
+
+  "Inv Inspector": "Inv Inspector",
+  "Create New User":"Create New User"
 }

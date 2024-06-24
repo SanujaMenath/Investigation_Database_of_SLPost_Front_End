@@ -1,7 +1,7 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import ToggleDarkModeImage from '../../assets/images.jpg';
-import i18n from '../../i18n';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import ToggleDarkModeImage from "../../assets/images.jpg";
+import i18n from "../../i18n";
 
 const toggleDarkMode = () => {
   document.documentElement.classList.toggle("dark");
@@ -13,9 +13,24 @@ const App: React.FC = () => {
   return (
     <div id="wrapper" className="">
       <div className="flex float-right items-center space-x-4 py-2 bg-white   ">
-        <button onClick={() => i18n.changeLanguage('en')} className="text-black hover:text-red-500">English</button>
-        <button onClick={() => i18n.changeLanguage('si')} className="text-black hover:text-red-500">සිංහල</button>
-        <button onClick={() => i18n.changeLanguage('ta')} className="text-black hover:text-red-500">தமிழ்</button>
+        <button
+          onClick={() => i18n.changeLanguage("en")}
+          className="text-black hover:text-red-500"
+        >
+          English
+        </button>
+        <button
+          onClick={() => i18n.changeLanguage("si")}
+          className="text-black hover:text-red-500"
+        >
+          සිංහල
+        </button>
+        <button
+          onClick={() => i18n.changeLanguage("ta")}
+          className="text-black hover:text-red-500"
+        >
+          தமிழ்
+        </button>
       </div>
 
       <img
@@ -27,7 +42,7 @@ const App: React.FC = () => {
       <button onClick={toggleDarkMode} className="fixed bottom-6 right-4">
         <img
           src={ToggleDarkModeImage}
-          alt={t('Toggle Dark Mode')}
+          alt={t("Toggle Dark Mode")}
           className="w-10 h-8"
         />
       </button>
@@ -40,23 +55,43 @@ const App: React.FC = () => {
                 href="/"
                 className="block text-white text-center py-4 px-6 hover:bg-gray-700"
               >
-                {t('Home')}
+                {t("Home")}
               </a>
             </li>
-            <li>
+            <li className="relative group">
               <a
                 href="/new-investigation"
                 className="block text-white text-center py-4 px-6 hover:bg-gray-700"
               >
-                {t('New Investigation')}
+                {t("New Investigation")}
               </a>
+              <ul className="absolute hidden group-hover:block bg-gray-800 shadow-lg">
+                <li>
+                  {" "}
+                  <a
+                    href="/new-investigation/inv-Inspector"
+                    className="block text-white text-center py-4 px-6 hover:bg-gray-700"
+                  >
+                    {t("Inv Inspector")}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/new-investigation/create-New-User"
+                    className="block text-white text-center py-4 px-6 hover:bg-gray-700"
+                  >
+                    {t("Create New User")}
+                  </a>
+                </li>
+              </ul>
             </li>
+
             <li className="relative group">
               <a
                 href="/update-investigation"
                 className="block text-white text-center py-4 px-6 hover:bg-gray-700"
               >
-                {t('Update Investigation')}
+                {t("Update Investigation")}
               </a>
               <ul className="absolute hidden group-hover:block bg-gray-800 shadow-lg">
                 <li>
@@ -64,7 +99,7 @@ const App: React.FC = () => {
                     href="/update-investigation/sub-item-1"
                     className="block text-white text-center py-4 px-6 hover:bg-gray-700"
                   >
-                    {t('Formal Inquiry')}
+                    {t("Formal Inquiry")}
                   </a>
                 </li>
                 <li>
@@ -72,7 +107,7 @@ const App: React.FC = () => {
                     href="/update-investigation/sub-item-2"
                     className="block text-white text-center py-4 px-6 hover:bg-gray-700"
                   >
-                    {t('Charge Sheet')}
+                    {t("Charge Sheet")}
                   </a>
                 </li>
                 <li>
@@ -80,7 +115,7 @@ const App: React.FC = () => {
                     href="/update-investigation/update-interim-report"
                     className="block text-white text-center py-4 px-6 hover:bg-gray-700"
                   >
-                    {t('Interim Report')}
+                    {t("Interim Report")}
                   </a>
                 </li>
               </ul>
@@ -90,7 +125,7 @@ const App: React.FC = () => {
                 href="/search"
                 className="block text-white text-center py-4 px-6 hover:bg-gray-700"
               >
-                {t('Search')}
+                {t("Search")}
               </a>
             </li>
             <li>
@@ -98,7 +133,7 @@ const App: React.FC = () => {
                 href="/Contact"
                 className="block text-white text-center py-4 px-6 hover:bg-gray-700"
               >
-                {t('Contact')}
+                {t("Contact")}
               </a>
             </li>
             <li>
@@ -106,7 +141,7 @@ const App: React.FC = () => {
                 href="/Login"
                 className="block text-white text-center py-4 px-6 hover:bg-gray-700"
               >
-                {t('Logout')}
+                {t("Logout")}
               </a>
             </li>
           </ul>
