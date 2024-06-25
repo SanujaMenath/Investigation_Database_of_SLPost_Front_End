@@ -1,6 +1,6 @@
 // src/pages/InvestigationDetails.tsx
 
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, {  useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,7 +10,6 @@ import {
   getInvestigationInspectors,
 } from "../services/api";
 import Button from "../components/UI/Button";
-import { Calendar } from "react-ionicons";
 import { InvestigationInspector, Suspector } from "../@types/api";
 
 const Investigation: React.FC = () => {
@@ -428,6 +427,17 @@ const Investigation: React.FC = () => {
                     )}
                   />
                 </div>
+
+                <div className=" space-y-2 w-full ml-3">
+                  <label htmlFor="dateOfInterimReportIssued">
+                    {t("Date of Interim Report Issued")}:
+                  </label>
+                  <input
+                    type="date"
+                    className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
+                    {...register(`interimReports.${i}.dateOfInterimReportIssued`)}
+                  />
+                  </div>
 
                 <Button
                   size="large"

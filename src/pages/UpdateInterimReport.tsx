@@ -1,99 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import {  updateInterimReport } from '../services/api';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { UpdateReports } from "../services/api";
+import Button from "../components/UI/Button";
 
 const UpdateInterimReport: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
 
-  type FormData = {
-    interimReportId: string;
-    interimRecommendation: string;
-    dateIssued: string;
-  };
+  type FormData = UpdateReports;
 
-  const [formData, setFormData] = useState<FormData>({
-    interimReportId: '',
-    interimRecommendation: '',
-    dateIssued: '',
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (id) {
-        const report = await getInterimReportById(id);
-        setFormData(report); // Use the fetched report directly as the state
-      }
-    };
-    fetchData();
-  }, [id]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (id) {
-      await updateInterimReport(id, formData);
-    } else {
-      console.error("Invalid ID");
-    }
-  };
+  const { register, handleSubmit } = useForm<FormData>();
 
   return (
     <div>
       <div className="font-bold">
         <div className="font-bold underline border-t-8 text-center text-4xl px-2 py-4 dark:bg-gray-900">
-          <h1 className="text-black dark:text-white">Update Interim Report</h1>
+          <h1 className="text-black dark:text-white">
+            {t("Update Interim Report")}
+          </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 p-4 dark:bg-gray-900 dark:text-white">
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="interimReportId">Interim Report ID :</label>
-              <input
-                type="text"
-                name="interimReportId"
-                className="border border-red-500 p-2 w-1/2"
-                value={formData.interimReportId}
-                onChange={handleChange}
-                placeholder="Interim Report ID"
-                
-              />
-            </div>
-
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="interimRecommendation">Interim Recommendation :</label>
-              <input
-                type="text"
-                name="interimRecommendation"
-                className="border border-red-500 p-2 w-1/2"
-                value={formData.interimRecommendation}
-                onChange={handleChange}
-                placeholder="Interim Recommendation"
-                required
-              />
-            </div>
-
-            <div className="flex flex-col space-y-2">
-              <label htmlFor="dateIssued">Date Issued :</label>
-              <input
-                type="date"
-                name="dateIssued"
-                className="border border-red-500 p-2 w-1/2"
-                value={formData.dateIssued}
-                onChange={handleChange}
-              />
-            </div>
+        <form
+           onSubmit={handleSubmit((data) => console.log(data))}
+        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4 mt-6"
+      >
+          <div className="flex flex-col space-y-2 w-1/2">
+            <input
+              type="text"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+              placeholder={t("Interim Report Id")}
+              {...register(`interimReportId`)}
+            />
           </div>
 
-          <button
-            type="submit"
-            className="float-none inline-block bg-gray-500 text-white p-2 rounded-lg w-1/4"
-          >
-            Submit
-          </button>
+          <div className=" space-y-2 w-full ml-3">
+            <label htmlFor="interdictedDate">{t("Interdicted Date ")}:</label>
+            <input
+              type="date"
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
+              {...register(`interdictedDate`)}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-2 w-full">
+            <textarea
+              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+              placeholder={t("Recommendation Of Interim Report")}
+              {...register(`recommendationOfInterimReport`)}
+            />
+          </div>
+
+          <div className=" space-y-2 w-full ml-3">
+                  <label htmlFor="dateOfInterimReportIssued">
+                    {t("Date of Interim Report Issued")}:
+                  </label>
+                  <input
+                    type="date"
+                    className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
+                    {...register(`dateOfInterimReportIssued`)}
+                  />
+                  </div>
+
+          <Button size="medium" type="submit">
+          {t("Submit")}
+        </Button>
         </form>
       </div>
     </div>

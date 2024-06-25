@@ -46,5 +46,11 @@
   "Submit": "Submit",
 
   "Inv Inspector": "Inv Inspector",
-  "Create New User":"Create New User"
+  "Create New User":"Create New User",
+  "Enter the Username":"Enter the Username",
+  "Enter Password":"Enter Password",
+  "Re-Enter Password":"Re-Enter Password",
+  "Update Formal Inquiry":"Update Formal Inquiry",
+  "Update Charge Sheet":"Update Charge Sheet",
+  "Update Interim Report":"Update Interim Report"
 }

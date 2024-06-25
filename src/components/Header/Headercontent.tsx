@@ -96,7 +96,7 @@ const App: React.FC = () => {
               <ul className="absolute hidden group-hover:block bg-gray-800 shadow-lg">
                 <li>
                   <a
-                    href="/update-investigation/sub-item-1"
+                    href="/update-investigation/update-formal-inquiry"
                     className="block text-white text-center py-4 px-6 hover:bg-gray-700"
                   >
                     {t("Formal Inquiry")}
@@ -104,7 +104,7 @@ const App: React.FC = () => {
                 </li>
                 <li>
                   <a
-                    href="/update-investigation/sub-item-2"
+                    href="/update-investigation/update-Charge-Sheet"
                     className="block text-white text-center py-4 px-6 hover:bg-gray-700"
                   >
                     {t("Charge Sheet")}

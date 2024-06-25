@@ -11,6 +11,8 @@ import UpdateInv from "./pages/UpdateInv";
 import UpdateInterimReport from "./pages/UpdateInterimReport";
 import InvestigationInspector from "./pages/InvestigationInspector";
 import NewUser from "./pages/NewUser";
+import UpdateChargeSheet from "./pages/UpdateChargeSheet";
+import UpdateFormalInquiry from "./pages/UpdateFormalInquiry";
 
 function App() {
   const router = createBrowserRouter([
@@ -32,6 +34,14 @@ function App() {
         {
             path: "/new-investigation/create-New-User",
             element: <NewUser />,
+          },
+          {
+            path: "/update-investigation/update-Charge-Sheet",
+            element: <UpdateChargeSheet />,
+          },
+          {
+            path: "/update-investigation/update-formal-inquiry",
+            element: <UpdateFormalInquiry />,
           },
         { path: "/search", element: <Search /> },
         { path: "/contact", element: <Contact /> },

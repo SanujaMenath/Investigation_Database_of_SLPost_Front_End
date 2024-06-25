@@ -70,6 +70,42 @@ export type InvInspectorProps ={
   nic:string;
 };
 
+export type NewUserDetails ={
+  userName:string;
+  password:string;
+  matchpassword:string;
+};
+
+export type UpdateInquiries={
+  formalInquiryId:string;
+  dateOfAppoint:string;
+  startedDate:string;
+  endDate:string;
+  recommendationOfIO:string;
+  dateOfRecommendation:string;
+}
+
+export type UpdateSheets={
+  chargeSheetId:string;
+  chargeSheetIssuedDate:string;
+  dateOfAnswered:string;
+  dateOfPersonalFileCalled:string;
+  dateOfPersonalReturned:string;
+  dateOfDisciplinaryOrderTaken:string;
+  dateOfAppealedForPSC:string;
+  pscOrderDescription:string;
+  dateOfPSCOrderTaken:string;
+  dateOfAppealedToAAT:string;
+  dateOfAATOrderTaken:string;
+  aatOrderDescription:string;
+}
+
+export type UpdateReports={
+  interimReportId: string;
+  interdictedDate: string;
+  recommendationOfInterimReport: string;
+  dateOfInterimReportIssued: string;
+}
 
 export const createInvestigation = async ({
   fileId,

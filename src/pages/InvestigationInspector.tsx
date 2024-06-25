@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InvInspectorProps } from "../services/api";
 import Button from "../components/UI/Button";
@@ -27,8 +27,8 @@ function InvestigationInspector() {
         onSubmit={handleSubmit((data) => console.log(data))}
         className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4 mt-6"
       >
-        <div className="flex flex-wrap items-center justify-between">
-          <label htmlFor="name">Investigation Inspector's Name</label>
+        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
+          <label htmlFor="name">{t("Investigation Inspector's Name")} :</label>
           <div className="flex flex-col space-y-2 w-1/2">
             <input
               type="text"
@@ -39,8 +39,8 @@ function InvestigationInspector() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between">
-          <label htmlFor="nic">Investigation Inspector's NIC</label>
+        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
+          <label htmlFor="nic">{t("Investigation Inspector's NIC")} :</label>
           <div className="flex flex-col space-y-2 w-1/2">
             <input
               type="text"
