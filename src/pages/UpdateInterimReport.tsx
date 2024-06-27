@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { UpdateReports } from "../services/api";
 import Button from "../components/UI/Button";
+import axios from "axios";
 
 const UpdateInterimReport: React.FC = () => {
   const { t } = useTranslation();
@@ -10,6 +11,19 @@ const UpdateInterimReport: React.FC = () => {
   type FormData = UpdateReports;
 
   const { register, handleSubmit } = useForm<FormData>();
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/interim-report",
+        data
+      );
+      console.log(response.data);
+      alert("Report updated successfully!");
+    } catch (error) {
+      console.error("There was an error updating the report!", error);
+    }
+  };
 
   return (
     <div>
@@ -21,7 +35,7 @@ const UpdateInterimReport: React.FC = () => {
         </div>
 
         <form
-           onSubmit={handleSubmit((data) => console.log(data))}
+           onSubmit={handleSubmit(onSubmit)}
         className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4 mt-6"
       >
           <div className="flex flex-col space-y-2 w-1/2">

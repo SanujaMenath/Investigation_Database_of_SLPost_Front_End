@@ -1,16 +1,17 @@
 // src/pages/InvestigationDetails.tsx
 
-import React, {  useRef } from "react";
+import React, { useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   InvestigationProps,
-  createIIAssignment,
-  createInvestigation,
   getInvestigationInspectors,
 } from "../services/api";
 import Button from "../components/UI/Button";
 import { InvestigationInspector, Suspector } from "../@types/api";
+import { createSuspector } from "../services/api/suspector";
+import { createInvestigation } from "../services/api/investigation";
+import { createInterimReport } from "../services/api/interimReport";
 
 const Investigation: React.FC = () => {
   const { t } = useTranslation();
@@ -109,7 +110,24 @@ const Investigation: React.FC = () => {
       </div>
 
       <form
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleSubmit(async ({ suspectors }) => {
+          // Creating suspectors
+          let isSuspectorsCreated = false;
+          for (const suspector of suspectors) {
+            isSuspectorsCreated = await createSuspector(suspector);
+            if(isSuspectorsCreated==true){
+              await createInvestigation;
+            }
+          }
+          let isReportCreated = false;
+          for (const InterimReport of interimReports) {
+          await createInterimReport(InterimReport);
+          }
+          console.log(isReportCreated ? "Suspector created" : "Failed");
+          console.log(isSuspectorsCreated ? "Suspector created" : "Failed");
+
+
+        })}
         className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4"
       >
         {/* Mandatory Fields */}
@@ -123,7 +141,7 @@ const Investigation: React.FC = () => {
                 type="text"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                 placeholder={t("File Number")}
-                {...register("fileId")}
+                {...register(`fileId`)}
               />
             </div>
 
@@ -137,19 +155,20 @@ const Investigation: React.FC = () => {
             </div>
 
             <div className="flex flex-col space-y-2 w-1/2">
+              <label htmlFor="incidentDate"> {t("Incident Date")}</label>
               <input
-                type="text"
+                type="date"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-                placeholder={t("Incident Date")}
                 {...register("incidentDate")}
               />
             </div>
-            <div className="flex space-y-2 w-1/2">
+            <div className=" space-y-2 w-1/2">
+              <label htmlFor="">Date Referred To Investigate</label>
               <input
                 type="date"
-                name="dateReferredToInvestigate"
                 id="dateReferredToInvestigate"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
+                {...register("dateReferredToInvestigate")}
               />
             </div>
           </div>
@@ -435,9 +454,11 @@ const Investigation: React.FC = () => {
                   <input
                     type="date"
                     className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
-                    {...register(`interimReports.${i}.dateOfInterimReportIssued`)}
+                    {...register(
+                      `interimReports.${i}.dateOfInterimReportIssued`
+                    )}
                   />
-                  </div>
+                </div>
 
                 <Button
                   size="large"
@@ -801,7 +822,6 @@ const Investigation: React.FC = () => {
             className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-1/2"
             placeholder={t("Person Who Accepted Submission")}
             {...register("personWhoAcceptedSubmission")}
-            required
           />
         </div>
 
