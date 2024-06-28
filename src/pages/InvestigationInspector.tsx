@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InvInspectorProps } from "../services/api";
 import Button from "../components/UI/Button";
+import { createInvInspector } from "../services/api/invInspector";
 
 function InvestigationInspector() {
   const { t } = useTranslation();
@@ -12,10 +13,24 @@ function InvestigationInspector() {
   const {
     register,
     handleSubmit,
-    control,
-    formState: { errors },
   } = useForm<FormData>();
 
+  const onSubmit = async (data: FormData) => {
+    let isInspectorCreated = false;
+    try {
+      // Assuming you have a function to handle the creation of the inspector
+      isInspectorCreated = await createInvInspector(data);
+    } catch (error) {
+      console.error(error);
+    }
+    if (isInspectorCreated) {
+      // handle success case
+      console.log("Inspector created successfully");
+    } else {
+      // handle failure case
+      console.log("Failed to create inspector");
+    }
+  };
   return (
     <div>
       <div className="font-bold underline border-t-8 text-center text-4xl px-2 py-4 dark:bg-gray-900">
@@ -24,7 +39,7 @@ function InvestigationInspector() {
         </h1>
       </div>
       <form
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleSubmit(onSubmit)}
         className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4 mt-6"
       >
         <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">

@@ -11,6 +11,30 @@ export type InterimReport = {
   interdictedDate: string;
   recommendationOfInterimReport: string;
   dateOfInterimReportIssued: string;
+};
+
+export type FormalInquiry =  {
+  formalInquiryId: string;
+  recommendationOfIO: string;
+  dateOfAppoint: string;
+  startedDate: string;
+  endDate: string;
+  dateOfRecommendation: string;
+};
+
+export type ChargeSheet = {
+  chargeSheetId: string;
+  chargeSheetIssuedDate: string;
+  dateOfAnswered: string;
+  dateOfPersonalFileCalled: string;
+  dateOfPersonalReturned: string;
+  dateOfDisciplinaryOrderTaken: string;
+  dateOfAppealedForPSC: string;
+  pscOrderDescription: string;
+  dateOfPSCOrderTaken: string;
+  dateOfAppealedToAAT: string;
+  dateOfAATOrderTaken: string;
+  aatOrderDescription: string;
 }
 
 export type InvestigationProps = {
@@ -30,14 +54,7 @@ export type InvestigationProps = {
 
   interimReports:InterimReport[];
 
-  formalInquries: {
-    formalInquiryId: string;
-    recommendationOfIO: string;
-    dateOfAppoint: string;
-    startedDate: string;
-    endDate: string;
-    dateOfRecommendation: string;
-  }[];
+  formalInquries:FormalInquiry[];
 
   investigationInspectors: {
     nic: string;
@@ -48,20 +65,7 @@ export type InvestigationProps = {
     reSubmittedDate: string;
   }[];
 
-  chargeSheet: {
-    chargeSheetId: string;
-    chargeSheetIssuedDate: string;
-    dateOfAnswered: string;
-    dateOfPersonalFileCalled: string;
-    dateOfPersonalReturned: string;
-    dateOfDisciplinaryOrderTaken: string;
-    dateOfAppealedForPSC: string;
-    pscOrderDescription: string;
-    dateOfPSCOrderTaken: string;
-    dateOfAppealedToAAT: string;
-    dateOfAATOrderTaken: string;
-    aatOrderDescription: string;
-  }[];
+  chargeSheet: ChargeSheet[];
 
   appealedAcceptedOrRejected: string;
   dateOfRestateForAppealed: string;
@@ -76,6 +80,9 @@ export type InvInspectorProps = {
 };
 
 export type NewUserDetails = {
+  firstName:string;
+  lastName:string;
+  email:string;
   userName: string;
   password: string;
   matchpassword: string;
@@ -112,72 +119,6 @@ export type UpdateReports = {
   dateOfInterimReportIssued: string;
 };
 
-// export const createInvestigation = async ({
-//   fileId,
-//   incident,
-//   incidentDate,
-//   dateReferredToInvestigate,
-//   dateOfFinalReportIssued,
-//   recommendationOfFinalReport,
-//   personWhoAcceptedSubmission,
-//   acceptedSubmissionDate,
-//   handOveredDateOfSubmission,
-//   status,
-// }: InvestigationProps) => {
-//   try {
-//     const url = baseUrl + "/api/investigations";
-
-//     const headers = new Headers();
-//     headers.append("Content-Type", "application/json");
-
-//     const raw = {
-//       fileId,
-//       incident,
-//       incidentDate: convertMillisecondsToLocalDateTime(
-//         Date.parse(incidentDate)
-//       ),
-//       dateReferredToInvestigate: dateReferredToInvestigate
-//         ? convertMillisecondsToLocalDateTime(
-//             Date.parse(dateReferredToInvestigate)
-//           )
-//         : null,
-//       dateOfFinalReportIssued: dateOfFinalReportIssued
-//         ? convertMillisecondsToLocalDateTime(
-//             Date.parse(dateOfFinalReportIssued)
-//           )
-//         : null,
-//       recommendationOfFinalReport,
-//       personWhoAcceptedSubmission,
-//       acceptedSubmissionDate: acceptedSubmissionDate
-//         ? convertMillisecondsToLocalDateTime(Date.parse(acceptedSubmissionDate))
-//         : null,
-//       handOveredDateOfSubmission: handOveredDateOfSubmission
-//         ? convertMillisecondsToLocalDateTime(
-//             Date.parse(handOveredDateOfSubmission)
-//           )
-//         : null,
-//       status,
-//     };
-
-//     const reqOption: RequestInit = {
-//       method: "POST",
-//       body: JSON.stringify(raw),
-//       headers,
-//     };
-
-//     const res = await fetch(url, reqOption);
-
-//     if (res.ok) {
-//       console.log(await res.json());
-//       alert("Item added!");
-//       return;
-//     }
-
-//     alert("Item not added!");
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
 
 export const getSearchResults = async (keyword: string) => {
   try {
@@ -199,56 +140,6 @@ export const getSearchResults = async (keyword: string) => {
   }
 };
 
-// export const updateInvestigation = async ({
-//   fileId,
-//   incident,
-//   incidentDate,
-//   dateReferredToInvestigate,
-//   dateOfFinalReportIssued,
-//   recommendationOfFinalReport,
-//   personWhoAcceptedSubmission,
-//   acceptedSubmissionDate,
-//   handOveredDateOfSubmission,
-//   status,
-// }: InvestigationProps) => {
-//   try {
-//     const url = `${baseUrl}/api/investigations/${fileId}`;
-
-//     const headers = new Headers();
-//     headers.append("Content-Type", "application/json");
-
-//     const raw = {
-//       fileId,
-//       incident,
-//       incidentDate,
-//       dateReferredToInvestigate,
-//       dateOfFinalReportIssued,
-//       recommendationOfFinalReport,
-//       personWhoAcceptedSubmission,
-//       acceptedSubmissionDate,
-//       handOveredDateOfSubmission,
-//       status,
-//     };
-
-//     const reqOption: RequestInit = {
-//       method: "PUT",
-//       body: JSON.stringify(raw),
-//       headers,
-//     };
-
-//     const res = await fetch(url, reqOption);
-
-//     if (res.ok) {
-//       console.log(await res.json());
-//       alert("Updated Successfully!");
-//       return;
-//     }
-
-//     alert("Update is not Success!");
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
 
 const API_URL = "http://localhost:8080/api/interim-report";
 
