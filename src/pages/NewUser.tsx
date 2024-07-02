@@ -28,10 +28,10 @@ function NewUser() {
     }
     if (isUSerCreated) {
       // handle success case
-      console.log("Inspector created successfully");
+      alert("User created successfully");
     } else {
       // handle failure case
-      console.log("Failed to create inspector");
+      alert("Failed to create New User");
     }
   };
     

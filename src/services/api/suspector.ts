@@ -1,7 +1,6 @@
 import { Suspector, baseUrl } from "../api";
 import { convertMillisecondsToLocalDateTime } from "../../utils/date";
 
-
 export const createSuspector = async ({
   name,
   dob,
@@ -12,9 +11,7 @@ export const createSuspector = async ({
   const rawBody = {
     nic,
     name,
-    dob: convertMillisecondsToLocalDateTime(
-        Date.parse(dob)
-      ),
+    dob: convertMillisecondsToLocalDateTime(dob),
   };
 
   const reqOption: RequestInit = {
@@ -35,7 +32,4 @@ export const createSuspector = async ({
   return response?.status === 200 ? true : false;
 };
 
-
-export const deleteSuspector = async () => {
-
-}
+export const deleteSuspector = async () => {};

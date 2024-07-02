@@ -15,8 +15,8 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="p-4 dark:bg-gray-900 h-full dark:text-white  bg-no-repeat " style={{backgroundImage:`url("${InvestingationImage}")`}}>
-      <h1 className="text-3xl">{t("Welcome to the Investigation Web Application")}</h1>
+    <div className="p-4 dark:bg-gray-900 bg- dark:text-white bg-no-repeat bg-fixed bg-cover h-full " style={{backgroundImage:`url("${InvestingationImage}")`}}>
+      <h1 className="text-4xl text-shadow-xl  border border-gray-800 border-4 rounded-md w-fit p-4">{t("Welcome to the Investigation Web Application")}</h1>
       
     </div>
   );

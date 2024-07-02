@@ -13,7 +13,7 @@ export type InterimReport = {
   dateOfInterimReportIssued: string;
 };
 
-export type FormalInquiry =  {
+export type FormalInquiry = {
   formalInquiryId: string;
   recommendationOfIO: string;
   dateOfAppoint: string;
@@ -35,10 +35,9 @@ export type ChargeSheet = {
   dateOfAppealedToAAT: string;
   dateOfAATOrderTaken: string;
   aatOrderDescription: string;
-}
+};
 
 export type InvestigationProps = {
-
   fileId: string;
   incident: string;
   incidentDate: string;
@@ -52,9 +51,9 @@ export type InvestigationProps = {
 
   suspectors: Suspector[];
 
-  interimReports:InterimReport[];
+  interimReports: InterimReport[];
 
-  formalInquries:FormalInquiry[];
+  formalInquries: FormalInquiry[];
 
   investigationInspectors: {
     nic: string;
@@ -71,7 +70,6 @@ export type InvestigationProps = {
   dateOfRestateForAppealed: string;
   dateOfFinalOrderThatInformedToAccused: string;
   dateOfAppealedForReinstate: string;
-  
 };
 
 export type InvInspectorProps = {
@@ -80,9 +78,9 @@ export type InvInspectorProps = {
 };
 
 export type NewUserDetails = {
-  firstName:string;
-  lastName:string;
-  email:string;
+  firstName: string;
+  lastName: string;
+  email: string;
   userName: string;
   password: string;
   matchpassword: string;
@@ -119,7 +117,6 @@ export type UpdateReports = {
   dateOfInterimReportIssued: string;
 };
 
-
 export const getSearchResults = async (keyword: string) => {
   try {
     const url = baseUrl + `/api/investigations/search?keyword=${keyword}`;
@@ -139,7 +136,6 @@ export const getSearchResults = async (keyword: string) => {
     console.error(e);
   }
 };
-
 
 const API_URL = "http://localhost:8080/api/interim-report";
 
@@ -195,19 +191,15 @@ export const createIIAssignment = async (assignment: IIAssigmentDTO) => {
       caseNo: assignment.caseNo,
       inspector: assignment.inspector,
       investigation: assignment.investigation,
-      acquiredDate: convertMillisecondsToLocalDateTime(
-        Date.parse(assignment.acquiredDate)
-      ),
+      acquiredDate: convertMillisecondsToLocalDateTime(assignment.acquiredDate),
       reacquiredDate: convertMillisecondsToLocalDateTime(
-        Date.parse(assignment.reacquiredDate ? assignment.reacquiredDate : "0")
+        assignment.reacquiredDate ? assignment.reacquiredDate : "0"
       ),
       submittedDate: convertMillisecondsToLocalDateTime(
-        Date.parse(assignment.submittedDate ? assignment.submittedDate : "0")
+        assignment.submittedDate ? assignment.submittedDate : "0"
       ),
       resubmittedDate: convertMillisecondsToLocalDateTime(
-        Date.parse(
-          assignment.resubmittedDate ? assignment.resubmittedDate : "0"
-        )
+        assignment.resubmittedDate ? assignment.resubmittedDate : "0"
       ),
     };
 

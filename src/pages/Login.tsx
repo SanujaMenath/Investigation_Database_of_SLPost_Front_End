@@ -1,32 +1,36 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Replace with actual authentication logic
-    if (username === 'user' && password === 'password') {
+    if (username === "user" && password === "password") {
       // Store authentication state
-      localStorage.setItem('isAuthenticated', 'true');
-      navigate('/');
+      localStorage.setItem("isAuthenticated", "true");
+      navigate("/");
     } else {
-      setError('Invalid username or password');
+      setError("Invalid username or password");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex items-center justify-center min-h-full bg-gray-100 dark:bg-gray-900 ">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">
+          Login
+        </h2>
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-400">Username:</label>
+            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-400">
+              Username:
+            </label>
             <input
               type="text"
               value={username}
@@ -36,7 +40,9 @@ const Login: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-400">Password:</label>
+            <label className="block mb-2 text-sm text-gray-600 dark:text-gray-400">
+              Password:
+            </label>
             <input
               type="password"
               value={password}

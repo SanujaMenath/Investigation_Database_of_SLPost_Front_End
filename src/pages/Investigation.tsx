@@ -110,26 +110,30 @@ const Investigation: React.FC = () => {
       </div>
 
       <form
-        onSubmit={handleSubmit(async ({ suspectors }) => {
+        onSubmit={handleSubmit(async (formData) => {
+          console.log(formData);
+          const { suspectors } = formData;
           // Creating suspectors
           let isSuspectorsCreated = false;
           for (const suspector of suspectors) {
             isSuspectorsCreated = await createSuspector(suspector);
-            if(isSuspectorsCreated==true){
-              await createInvestigation;
-            }
           }
+
           let isReportCreated = false;
-          for (const InterimReport of interimReports) {
-          await createInterimReport(InterimReport);
-          }
+          
           console.log(isReportCreated ? "Suspector created" : "Failed");
           console.log(isSuspectorsCreated ? "Suspector created" : "Failed");
 
+          let isInvestigationCreated = false;
+          isInvestigationCreated = await createInvestigation(formData);
+          if(isInvestigationCreated){
+            for (const InterimReport of interimReports) {
+              isReportCreated = await createInterimReport(InterimReport);
+            }
+          }
 
         })}
-        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4"
-      >
+        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4">
         {/* Mandatory Fields */}
         <div id="mandatoryFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
@@ -142,6 +146,7 @@ const Investigation: React.FC = () => {
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                 placeholder={t("File Number")}
                 {...register(`fileId`)}
+                required
               />
             </div>
 
@@ -245,14 +250,6 @@ const Investigation: React.FC = () => {
                   }}
                 >
                   Add New
-                </Button>
-                <Button
-                  size="medium"
-                  type="button"
-                  className="bg-[#e65959]/20 text-[#e65959] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
-                  onClick={() => setInvestigationInspectorNICs([])}
-                >
-                  Clear
                 </Button>
               </div>
             </div>
