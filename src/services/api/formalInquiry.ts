@@ -3,6 +3,7 @@ import { FormalInquiry, baseUrl } from "../api";
 
 export const createFormalInquiry = async ({
   formalInquiryId,
+  fileId,
   recommendationOfIO,
   dateOfAppoint,
   startedDate,
@@ -12,16 +13,22 @@ export const createFormalInquiry = async ({
   const url = `${baseUrl}/api/formal-inquiries`;
 
   const rawBody = {
-    formalInquiryId,
+    investigation: {
+      fileId: fileId,
+    },
+
+    id:formalInquiryId,
+   
+    dateOfAppoint: convertMillisecondsToLocalDateTime(
+      (dateOfAppoint)
+    ),
+    startedDate: convertMillisecondsToLocalDateTime(startedDate),
+    endDate: convertMillisecondsToLocalDateTime(endDate),
+
     recommendationOfIO,
 
-    dateOfAppoint: convertMillisecondsToLocalDateTime(
-      Date.parse(dateOfAppoint)
-    ),
-    startedDate: convertMillisecondsToLocalDateTime(Date.parse(startedDate)),
-    endDate: convertMillisecondsToLocalDateTime(Date.parse(endDate)),
     dateOfRecommendation: convertMillisecondsToLocalDateTime(
-      Date.parse(dateOfRecommendation)
+      (dateOfRecommendation)
     ),
   };
 

@@ -1,71 +1,78 @@
 import { convertMillisecondsToLocalDateTime } from "../../utils/date";
-import { baseUrl,ChargeSheet } from "../api";
+import { baseUrl, ChargeSheet } from "../api";
 
-export const createChargeSheet =async({
-    chargeSheetId,
-    chargeSheetIssuedDate,
-    dateOfAnswered,
-    dateOfPersonalFileCalled,
-    dateOfPersonalReturned,
-    dateOfDisciplinaryOrderTaken,
-    dateOfAppealedForPSC,
+export const createChargeSheet = async ({
+  chargeSheetId,
+  fileId,
+  suspectorNic,
+  chargeSheetIssuedDate,
+  dateOfAnswered,
+  dateOfPersonalFileCalled,
+  dateOfPersonalReturned,
+  dateOfDisciplinaryOrderTaken,
+  dateOfAppealedForPSC,
+  pscOrderDescription,
+  dateOfPSCOrderTaken,
+  dateOfAppealedToAAT,
+  dateOfAATOrderTaken,
+  aatOrderDescription,
+}: ChargeSheet): Promise<boolean> => {
+  const url = `${baseUrl}/api/charge-sheet`;
+
+  const rawBody = {
+    id:chargeSheetId,
+
+    investigation: {
+      fileId: fileId,
+    },
+
+    suspector: {
+      nic: suspectorNic
+  },
+
+    chargeSheetIssuedDate: convertMillisecondsToLocalDateTime(
+      chargeSheetIssuedDate
+    ),
+    dateOfAnswered: convertMillisecondsToLocalDateTime(dateOfAnswered),
+    dateOfPersonalFileCalled: convertMillisecondsToLocalDateTime(
+      dateOfPersonalFileCalled
+    ),
+    dateOfPersonalReturned: convertMillisecondsToLocalDateTime(
+      dateOfPersonalReturned
+    ),
+    dateOfDisciplinaryOrderTaken: convertMillisecondsToLocalDateTime(
+      dateOfDisciplinaryOrderTaken
+    ),
+    dateOfAppealedForPSC:
+      convertMillisecondsToLocalDateTime(dateOfAppealedForPSC),
     pscOrderDescription,
-    dateOfPSCOrderTaken,
-    dateOfAppealedToAAT,
-    dateOfAATOrderTaken,
-    aatOrderDescription,
-}:ChargeSheet): Promise<boolean> => {
-    const url = `${baseUrl}/api/charge-sheet`;
-  
-    const rawBody = {
-        chargeSheetId,
-        chargeSheetIssuedDate: convertMillisecondsToLocalDateTime(
-            Date.parse(chargeSheetIssuedDate)
-          ),
-        dateOfAnswered: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfAnswered)
-          ),
-        dateOfPersonalFileCalled: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfPersonalFileCalled)
-          ),
-        dateOfPersonalReturned: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfPersonalReturned)
-          ),
-        dateOfDisciplinaryOrderTaken: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfDisciplinaryOrderTaken)
-          ),
-        dateOfAppealedForPSC: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfAppealedForPSC)
-          ),
-        pscOrderDescription,
 
-        dateOfPSCOrderTaken: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfPSCOrderTaken)
-          ),
-        dateOfAppealedToAAT: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfAppealedToAAT)
-          ),
-        dateOfAATOrderTaken: convertMillisecondsToLocalDateTime(
-            Date.parse(dateOfAATOrderTaken)
-          ),
-        aatOrderDescription,
-    };
-  
-    const reqOption: RequestInit = {
-      method: "POST",
-      body: JSON.stringify(rawBody),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-  
-    let response;
-    try {
-      response = await fetch(url, reqOption);
-    } catch (error) {
-      console.log(error);
-    }
-  
-    return response?.status === 200 ? true : false;
+    dateOfPSCOrderTaken:
+      convertMillisecondsToLocalDateTime(dateOfPSCOrderTaken),
+
+    dateOfAppealedToAAT:
+      convertMillisecondsToLocalDateTime(dateOfAppealedToAAT),
+
+    dateOfAATOrderTaken:
+      convertMillisecondsToLocalDateTime(dateOfAATOrderTaken),
+
+    aatOrderDescription,
   };
-  
+
+  const reqOption: RequestInit = {
+    method: "POST",
+    body: JSON.stringify(rawBody),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  let response;
+  try {
+    response = await fetch(url, reqOption);
+  } catch (error) {
+    console.log(error);
+  }
+
+  return response?.status === 200 ? true : false;
+};

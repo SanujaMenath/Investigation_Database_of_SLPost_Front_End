@@ -1,131 +1,164 @@
-import React from 'react'
-import {  useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { NewUserDetails } from '../services/api';
+import { NewUserDetails } from "../services/api";
 import Button from "../components/UI/Button";
-import { createNewUser } from '../services/api/newUser';
+import { createNewUser } from "../services/api/newUser";
+import {
+  fetchProvinces,
+  fetchDivisions,
+} from "../services/api/locationService";
 
 function NewUser() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
+  const [locations, setLocations] = useState<string[]>([]);
 
-    type FormData = NewUserDetails;
+  type FormData = NewUserDetails;
 
-    const {
-      register,
-      handleSubmit,
-      control,
-      formState: { errors },
-    } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>();
 
-    const onSubmit = async (data:FormData) =>{
-      let isUSerCreated = false;
+  // Watch locationType field
+  const locationType = watch("locationType");
+
+  useEffect(() => {
+    const loadLocations = async () => {
+      if (locationType === "Province") {
+        const provinces = await fetchProvinces();
+        setLocations(provinces);
+      } else if (locationType === "Division") {
+        const divisions = await fetchDivisions();
+        setLocations(divisions);
+      } else {
+        setLocations([]);
+      }
+    };
+    loadLocations();
+  }, [locationType]);
+
+  const onSubmit = async (data: FormData) => {
+    let isUserCreated = false;
 
     try {
-      // Assuming you have a function to handle the creation of the inspector
-      isUSerCreated = await createNewUser(data);
+      isUserCreated = await createNewUser(data);
     } catch (error) {
       console.error(error);
     }
-    if (isUSerCreated) {
-      // handle success case
+    if (isUserCreated) {
       alert("User created successfully");
     } else {
-      // handle failure case
       alert("Failed to create New User");
     }
   };
-    
+
   return (
     <div>
       <div className="font-bold underline border-t-8 text-center text-4xl px-2 py-4 dark:bg-gray-900">
-        <h1 className="text-black dark:text-white">
-          {t("Create New USer")}
-        </h1>
-        </div>
+        <h1 className="text-black dark:text-white">{t("Create New User")}</h1>
+      </div>
 
-        <form
+      <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4 mt-6"
+        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border rounded mb-4 mt-6"
       >
-        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
-          <label htmlFor="firstName">{t("Enter the First Name")} :</label>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder={t("First Name")}
-              {...register("firstName")}
-            />
-          </div>
+        {/* Email */}
+        <div className="flex flex-wrap items-center justify-between text-lg font-medium">
+          <label htmlFor="email">{t("Enter the Email")}:</label>
+          <input
+            type="email"
+            className="border px-3 py-2 rounded"
+            placeholder={t("Email")}
+            {...register("email", { required: true })}
+          />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
-          <label htmlFor="lastName">{t("Enter the Last Name")} :</label>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder={t("Last Name")}
-              {...register("lastName")}
-            />
-          </div>
+        {/* First Name */}
+        <div className="flex flex-wrap items-center justify-between text-lg font-medium">
+          <label htmlFor="firstName">{t("Enter the First Name")}:</label>
+          <input
+            type="text"
+            className="border px-3 py-2 rounded"
+            placeholder={t("First Name")}
+            {...register("firstName", { required: true })}
+          />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
-          <label htmlFor="e-mail">{t("Enter the E-mail")} :</label>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="email"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder={t("E-mail")}
-              {...register("email")}
-            />
-          </div>
+        {/* Last Name */}
+        <div className="flex flex-wrap items-center justify-between text-lg font-medium">
+          <label htmlFor="lastName">{t("Enter the Last Name")}:</label>
+          <input
+            type="text"
+            className="border px-3 py-2 rounded"
+            placeholder={t("Last Name")}
+            {...register("lastName", { required: true })}
+          />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
-          <label htmlFor="userName">{t("Enter the Username")} :</label>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder={t("Username")}
-              {...register("userName")}
-            />
-          </div>
+        {/* Password */}
+        <div className="flex flex-wrap items-center justify-between text-lg font-medium">
+          <label htmlFor="password">{t("Enter Password")}:</label>
+          <input
+            type="password"
+            className="border px-3 py-2 rounded"
+            placeholder={t("Password")}
+            {...register("password", { required: true })}
+          />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
-          <label htmlFor="password">{t("Enter Password")} :</label>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder={t("Password")}
-              {...register("password")}
-            />
-          </div>
+        {/* Role */}
+        <div className="flex flex-wrap items-center justify-between text-lg font-medium">
+          <label htmlFor="role">{t("Select Role")}:</label>
+          <select
+            className="border w-40 px-3 py-2 rounded"
+            {...register("role", { required: true })}
+          >
+            <option value="Admin">{t("Admin")}</option>
+            <option value="CLERK">{t("User")}</option>
+          </select>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-lg text-[#4a4a4a] font-medium ml-2">
-          <label htmlFor="matchpassword">{t("Re-Enter Password")} :</label>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder={t("Re-Enter Password")}
-              {...register("matchpassword")}
-            />
-          </div>
+        {/* Location Type */}
+        <div className="flex flex-wrap items-center justify-between text-lg font-medium">
+          <label htmlFor="locationType">{t("Select Location Type")}:</label>
+          <select
+            className="border w-40 px-3 py-2 rounded"
+            {...register("locationType", { required: true })}
+          >
+            <option value="">{t("Select Type")}</option>
+            <option value="PROVINCE">{t("Province")}</option>
+            <option value="DIVISION">{t("Division")}</option>
+            <option value="ISLAND">{t("Island")}</option>
+          </select>
         </div>
+
+        {/* Location */}
+        {locationType && (
+          <div className="flex flex-wrap items-center justify-between text-lg font-medium">
+            <label htmlFor="location">{t("Select Location")}:</label>
+            <select
+              className="border px-3 py-2 rounded"
+              {...register("locationId", { required: true })}
+            >
+              <option value="">{t("Select Location")}</option>
+              {locations.map((loc, index) => (
+                <option key={index} value={loc}>
+                  {loc}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <Button size="medium" type="submit">
           {t("Submit")}
         </Button>
       </form>
-      </div>
-    
-  )
+    </div>
+  );
 }
 
-export default NewUser
+export default NewUser;

@@ -12,6 +12,8 @@ import { InvestigationInspector, Suspector } from "../@types/api";
 import { createSuspector } from "../services/api/suspector";
 import { createInvestigation } from "../services/api/investigation";
 import { createInterimReport } from "../services/api/interimReport";
+import { createFormalInquiry } from "../services/api/formalInquiry";
+import { createChargeSheet } from "../services/api/chargeSheet";
 
 const Investigation: React.FC = () => {
   const { t } = useTranslation();
@@ -59,7 +61,7 @@ const Investigation: React.FC = () => {
     append: appendChargeSheet,
     remove: removeChargeSheet,
   } = useFieldArray({
-    name: "chargeSheet",
+    name: "chargeSheets",
     control,
   });
 
@@ -112,28 +114,51 @@ const Investigation: React.FC = () => {
       <form
         onSubmit={handleSubmit(async (formData) => {
           console.log(formData);
-          const { suspectors } = formData;
-          // Creating suspectors
-          let isSuspectorsCreated = false;
-          for (const suspector of suspectors) {
-            isSuspectorsCreated = await createSuspector(suspector);
-          }
+          const { suspectors,interimReports,formalInquries,chargeSheets,fileId } = formData;
 
+          let isSuspectorsCreated = false;
           let isReportCreated = false;
-          
-          console.log(isReportCreated ? "Suspector created" : "Failed");
-          console.log(isSuspectorsCreated ? "Suspector created" : "Failed");
+          let isInquiryCreated = false;
+          let isSheetCreated = false;
 
           let isInvestigationCreated = false;
           isInvestigationCreated = await createInvestigation(formData);
-          if(isInvestigationCreated){
+
+          if (isInvestigationCreated) {
+            // Creating suspectors
+            for (const suspector of suspectors) {
+              isSuspectorsCreated = await createSuspector(suspector);
+              console.log(isSuspectorsCreated ? "Suspector created" : "Failed");
+              alert(
+                isSuspectorsCreated
+                  ? "Suspector created !"
+                  : "Unsuccessful Attempt!"
+              );
+            }
+
             for (const InterimReport of interimReports) {
-              isReportCreated = await createInterimReport(InterimReport);
+              isReportCreated = await createInterimReport({...InterimReport,fileId});
+              console.log(isReportCreated ? "Report created" : "Failed");
+              alert(
+                isReportCreated ? "Report created !" : "Unsuccessful Attempt!"
+              );
+            }
+
+            for (const FormalInquiry of formalInquries) {
+              isInquiryCreated = await createFormalInquiry({...FormalInquiry,fileId});
+              console.log(isInquiryCreated ? "Inquiry created" : "Failed");
+              alert(
+                isInquiryCreated ? "Inquiry created !" : "Unsuccessful Attempt!"
+              );
+            }
+            for (const ChargeSheet of chargeSheets) {
+              isSheetCreated = await createChargeSheet({...ChargeSheet,fileId});
+              console.log(isSheetCreated ? "Inquiry created" : "Failed");
             }
           }
-
         })}
-        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4">
+        className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4"
+      >
         {/* Mandatory Fields */}
         <div id="mandatoryFields" className="flex flex-col w-full gap-2">
           <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
@@ -141,34 +166,36 @@ const Investigation: React.FC = () => {
           </h1>
           <div className="flex flex-wrap items-center justify-between">
             <div className="flex flex-col space-y-2 w-1/2">
+            <label  className="ml-3" htmlFor="fileId"> {t("File  Number")}</label>
               <input
                 type="text"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-                placeholder={t("File Number")}
+                placeholder={t("Ex:- Inv/01")}
                 {...register(`fileId`)}
                 required
               />
             </div>
 
             <div className="flex flex-col space-y-2 w-1/2">
+            <label htmlFor="fileId" className="ml-3"> {t("Incident")}</label>
               <input
                 type="text"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-                placeholder={t("Incident")}
+                placeholder={t("Ex:- Vehcle Accident")}
                 {...register("incident")}
               />
             </div>
 
-            <div className="flex flex-col space-y-2 w-1/2">
-              <label htmlFor="incidentDate"> {t("Incident Date")}</label>
+            <div className="flex flex-col space-y-2 w-1/2 mt-3">
+              <label  className="ml-3" htmlFor="incidentDate"> {t("Incident Date")}</label>
               <input
                 type="date"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                 {...register("incidentDate")}
               />
             </div>
-            <div className=" space-y-2 w-1/2">
-              <label htmlFor="">Date Referred To Investigate</label>
+            <div className=" space-y-2 w-1/2 mt-3">
+              <label  className="ml-3 " htmlFor="">Date Referred To Investigate</label>
               <input
                 type="date"
                 id="dateReferredToInvestigate"
@@ -199,7 +226,6 @@ const Investigation: React.FC = () => {
           <div className="flex w-full items-start justify-between">
             <div className="flex flex-col space-y-2 w-1/2 justify-start">
               <select
-                name="selectInspector"
                 id="selectInspector"
                 ref={selectionInsepectorDropdownRef}
                 className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
@@ -401,7 +427,9 @@ const Investigation: React.FC = () => {
             className="bg-[#5964e6]/20 text-[#5964e6] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
             onClick={() =>
               appendInterimReports({
+                fileId:"",
                 interimReportId: "",
+                iiId:"",
                 interdictedDate: "",
                 dateOfInterimReportIssued: "",
                 recommendationOfInterimReport: "",
@@ -420,6 +448,39 @@ const Investigation: React.FC = () => {
                     className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                     placeholder={t("Interim Report Id")}
                     {...register(`interimReports.${i}.interimReportId`)}
+                  />
+                </div>
+
+                {/* <select
+                id="selectInspector"
+                ref={selectionInsepectorDropdownRef}
+                className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+              >
+                <option value={undefined} selected disabled>
+                  Select from here
+                </option>
+                {investigationInspectorList?.map((each) => {
+                  const investigator = [each.name, each.nic];
+
+                  return (
+                    <option
+                      key={each.nic}
+                      value={each.nic}
+                      disabled={each.disabled}
+                    >
+                      {each.name}
+                    </option>
+                  );
+                })}
+              </select> */}
+
+                <div className="flex flex-col space-y-2 w-1/2">
+                  <input
+                    type="text"
+                    className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+                    placeholder={t("Inv Inspector Id")}
+                    {...register(`interimReports.${i}.iiId`)}
+                    
                   />
                 </div>
 
@@ -483,6 +544,7 @@ const Investigation: React.FC = () => {
             onClick={() =>
               appendFormalInquries({
                 formalInquiryId: "",
+                fileId:"",
                 recommendationOfIO: "",
                 dateOfAppoint: "",
                 startedDate: "",
@@ -580,6 +642,8 @@ const Investigation: React.FC = () => {
             onClick={() =>
               appendChargeSheet({
                 chargeSheetId: "",
+                fileId:"",
+                suspectorNic:"",
                 chargeSheetIssuedDate: "",
                 dateOfAnswered: "",
                 dateOfPersonalFileCalled: "",
@@ -608,7 +672,16 @@ const Investigation: React.FC = () => {
                   type="text"
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Charge Sheet Id")}
-                  {...register(`chargeSheet.${i}.chargeSheetId`)}
+                  {...register(`chargeSheets.${i}.chargeSheetId`)}
+                />
+              </div>
+
+              <div className="flex flex-col space-y-2 w-1/2">
+                <input
+                  type="text"
+                  className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+                  placeholder={t("Nic of Suspector")}
+                  {...register(`chargeSheets.${i}.suspectorNic`)}
                 />
               </div>
 
@@ -621,7 +694,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.chargeSheetIssuedDate`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Charge Sheet Issued Date")}
-                  {...register(`chargeSheet.${i}.chargeSheetIssuedDate`)}
+                  {...register(`chargeSheets.${i}.chargeSheetIssuedDate`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -633,7 +706,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfAnswered`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of Answered")}
-                  {...register(`chargeSheet.${i}.dateOfAnswered`)}
+                  {...register(`chargeSheets.${i}.dateOfAnswered`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -645,7 +718,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfPersonalFileCalled`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of Personal File Called")}
-                  {...register(`chargeSheet.${i}.dateOfPersonalFileCalled`)}
+                  {...register(`chargeSheets.${i}.dateOfPersonalFileCalled`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -657,7 +730,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfPersonalReturned`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of Personal Returned")}
-                  {...register(`chargeSheet.${i}.dateOfPersonalReturned`)}
+                  {...register(`chargeSheets.${i}.dateOfPersonalReturned`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -671,7 +744,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfDisciplinaryOrderTaken`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of Disciplinary Order Taken")}
-                  {...register(`chargeSheet.${i}.dateOfDisciplinaryOrderTaken`)}
+                  {...register(`chargeSheets.${i}.dateOfDisciplinaryOrderTaken`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -683,7 +756,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfAppealedForPSC`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of Appealed For PSC")}
-                  {...register(`chargeSheet.${i}.dateOfAppealedForPSC`)}
+                  {...register(`chargeSheets.${i}.dateOfAppealedForPSC`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -694,7 +767,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.pscOrderDescription`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("PSC Order Description")}
-                  {...register(`chargeSheet.${i}.pscOrderDescription`)}
+                  {...register(`chargeSheets.${i}.pscOrderDescription`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -706,7 +779,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfPSCOrderTaken`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of PSC Order Taken")}
-                  {...register(`chargeSheet.${i}.dateOfPSCOrderTaken`)}
+                  {...register(`chargeSheets.${i}.dateOfPSCOrderTaken`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -718,7 +791,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfAppealedToAAT`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of Appealed To AAT")}
-                  {...register(`chargeSheet.${i}.dateOfAppealedToAAT`)}
+                  {...register(`chargeSheets.${i}.dateOfAppealedToAAT`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -730,7 +803,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfAATOrderTaken`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of AAT Order Taken")}
-                  {...register(`chargeSheet.${i}.dateOfAATOrderTaken`)}
+                  {...register(`chargeSheets.${i}.dateOfAATOrderTaken`)}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -741,7 +814,7 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.aatOrderDescription`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("AAT Order Description")}
-                  {...register(`chargeSheet.${i}.aatOrderDescription`)}
+                  {...register(`chargeSheets.${i}.aatOrderDescription`)}
                 />
               </div>
 

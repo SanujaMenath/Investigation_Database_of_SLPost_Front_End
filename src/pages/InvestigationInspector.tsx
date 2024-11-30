@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InvInspectorProps } from "../services/api";
@@ -26,9 +25,11 @@ function InvestigationInspector() {
     if (isInspectorCreated) {
       // handle success case
       console.log("Inspector created successfully");
+      alert("Investigation Inspector created Successfully!")
     } else {
       // handle failure case
       console.log("Failed to create inspector");
+      alert("Unsuccessful attempt!")
     }
   };
   return (

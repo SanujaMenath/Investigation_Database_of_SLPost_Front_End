@@ -7,13 +7,16 @@ export const baseUrl = "http://localhost:8080";
 export type Suspector = { name: string; nic: string; dob: string };
 
 export type InterimReport = {
+  fileId:string
   interimReportId: string;
+  iiId:string;
   interdictedDate: string;
   recommendationOfInterimReport: string;
   dateOfInterimReportIssued: string;
 };
 
 export type FormalInquiry = {
+  fileId:string
   formalInquiryId: string;
   recommendationOfIO: string;
   dateOfAppoint: string;
@@ -23,6 +26,8 @@ export type FormalInquiry = {
 };
 
 export type ChargeSheet = {
+  fileId:string;
+  suspectorNic:string,
   chargeSheetId: string;
   chargeSheetIssuedDate: string;
   dateOfAnswered: string;
@@ -55,6 +60,8 @@ export type InvestigationProps = {
 
   formalInquries: FormalInquiry[];
 
+  chargeSheets: ChargeSheet[];
+
   investigationInspectors: {
     nic: string;
     caseNo: string;
@@ -64,7 +71,7 @@ export type InvestigationProps = {
     reSubmittedDate: string;
   }[];
 
-  chargeSheet: ChargeSheet[];
+  
 
   appealedAcceptedOrRejected: string;
   dateOfRestateForAppealed: string;
@@ -78,12 +85,13 @@ export type InvInspectorProps = {
 };
 
 export type NewUserDetails = {
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
-  userName: string;
+  locationId: number;
+  locationType: string; 
   password: string;
-  matchpassword: string;
+  role: string; 
 };
 
 export type UpdateInquiries = {
