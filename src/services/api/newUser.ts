@@ -8,15 +8,16 @@ export const createNewUser = async ({
   locationType,
   password,
   role,
+  
 }: NewUserDetails): Promise<boolean> => {
-  const url = `${baseUrl}/api/users`;
+  const url = `${baseUrl}/api/users/add`;
 
   const rawBody = {
     email,
-    first_name: firstName, 
-    last_name: lastName,
-    location_id: locationId,
-    location_type: locationType,
+    firstName: firstName, 
+    lastName: lastName,
+    locationId: (locationId),
+    locationType: locationType,
     password,
     role,
   };

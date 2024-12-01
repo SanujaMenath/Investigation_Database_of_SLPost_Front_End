@@ -11,8 +11,8 @@ import {
 
 function NewUser() {
   const { t } = useTranslation();
-  const [locations, setLocations] = useState<string[]>([]);
-
+  const [locations, setLocations] = useState<{ id: string; name: string }[]>([]);
+  
   type FormData = NewUserDetails;
 
   const {
@@ -22,26 +22,26 @@ function NewUser() {
     formState: { errors },
   } = useForm<FormData>();
 
-  // Watch locationType field
+
   const locationType = watch("locationType");
+  const provinceId = watch("provinceId");
 
   useEffect(() => {
     const loadLocations = async () => {
-      if (locationType === "Province") {
+      if (locationType === "PROVINCE") {
         const provinces = await fetchProvinces();
         setLocations(provinces);
-      } else if (locationType === "Division") {
+      } else if (locationType === "DIVISION" ) {
         const divisions = await fetchDivisions();
         setLocations(divisions);
-      } else {
-        setLocations([]);
-      }
+      } else setLocations([]);
     };
     loadLocations();
-  }, [locationType]);
+  }, [locationType, provinceId]);
 
   const onSubmit = async (data: FormData) => {
     let isUserCreated = false;
+    data.locationId = parseInt(data.locationId.toString());
 
     try {
       isUserCreated = await createNewUser(data);
@@ -116,8 +116,9 @@ function NewUser() {
             className="border w-40 px-3 py-2 rounded"
             {...register("role", { required: true })}
           >
-            <option value="Admin">{t("Admin")}</option>
-            <option value="CLERK">{t("User")}</option>
+            <option value="CLERK">{t("CLERK")}</option>
+            <option value="DIVISIONAL_SUPERINTENDENT">{t("DS")}</option>
+            <option value="DEPUTY_POST_MASTER_GENERAL">{t("DPMG")}</option>
           </select>
         </div>
 
@@ -131,22 +132,22 @@ function NewUser() {
             <option value="">{t("Select Type")}</option>
             <option value="PROVINCE">{t("Province")}</option>
             <option value="DIVISION">{t("Division")}</option>
-            <option value="ISLAND">{t("Island")}</option>
+            
           </select>
         </div>
 
-        {/* Location */}
+        {/* Province Selection (visible only if locationType is 'DIVISION') */}
         {locationType && (
           <div className="flex flex-wrap items-center justify-between text-lg font-medium">
-            <label htmlFor="location">{t("Select Location")}:</label>
+            <label htmlFor="locationId">{t(`Select ${locationType?.toLowerCase()}`)}:</label>
             <select
               className="border px-3 py-2 rounded"
-              {...register("locationId", { required: true })}
+              {...register("locationId", { required: locationType === "location" })}
             >
-              <option value="">{t("Select Location")}</option>
-              {locations.map((loc, index) => (
-                <option key={index} value={loc}>
-                  {loc}
+              <option value="">{t(`Select ${locationType?.toLowerCase()}`)}</option>
+              {locations.map((location, index) => (
+                <option key={index} value={location.id}>
+                  {location.name}
                 </option>
               ))}
             </select>

@@ -1,11 +1,14 @@
-export const fetchProvinces = async () => {
-    const response = await fetch("/api/locations/provinces");
-    return response.json();
-  };
+import axios from "axios";
+import { baseUrl } from "../api";
 
-  
-  export const fetchDivisions = async () => {
-    const response = await fetch("/api/locations/divisions");
-    return response.json();
-  };
+export const fetchProvinces = async () => {
+    const response = await axios.get( baseUrl + "/api/provinces/all");
+    return response.data;
+};
+
+export const fetchDivisions = async () => {
+    const response = await axios.get(`${baseUrl}/api/divisions/all`);
+    return response.data;
+};
+
   

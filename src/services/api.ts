@@ -92,6 +92,8 @@ export type NewUserDetails = {
   locationType: string; 
   password: string;
   role: string; 
+  provinceId: number;
+  divisionId: number;
 };
 
 export type UpdateInquiries = {
