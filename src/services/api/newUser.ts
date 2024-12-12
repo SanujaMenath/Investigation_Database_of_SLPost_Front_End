@@ -10,7 +10,7 @@ export const createNewUser = async ({
   role,
   
 }: NewUserDetails): Promise<boolean> => {
-  const url = `${baseUrl}/api/users/add`;
+  const url = `${baseUrl}/api/users/create`;
 
   const rawBody = {
     email,

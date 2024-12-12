@@ -52,6 +52,7 @@ export type InvestigationProps = {
   personWhoAcceptedSubmission: string;
   acceptedSubmissionDate: string;
   handOveredDateOfSubmission: string;
+  divisionId: number;
   status: string;
 
   suspectors: Suspector[];

@@ -1,6 +1,6 @@
 // src/pages/InvestigationDetails.tsx
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -14,9 +14,13 @@ import { createInvestigation } from "../services/api/investigation";
 import { createInterimReport } from "../services/api/interimReport";
 import { createFormalInquiry } from "../services/api/formalInquiry";
 import { createChargeSheet } from "../services/api/chargeSheet";
+import {  fetchDivisions,} from "../services/api/locationService";
+import { use } from "i18next";
+import { Watch } from "react-ionicons";
 
 const Investigation: React.FC = () => {
   const { t } = useTranslation();
+
 
   type FormData = InvestigationProps;
 
@@ -73,6 +77,15 @@ const Investigation: React.FC = () => {
     name: "investigationInspectors",
     control,
   });
+
+  const divisionId = Watch("divisionId");
+  useEffect(() => {
+    const divisions = fetchDivisions();
+  }, []);
+
+  const onSubmit = async (data: FormData) => {
+    data.divisionId = parseInt(data.divisionId.toString());
+  }
 
   const [suspectorList, setSuspectorList] = React.useState<Array<Suspector>>();
 
@@ -926,6 +939,23 @@ const Investigation: React.FC = () => {
             className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10"
             {...register("dateOfAppealedForReinstate")}
           />
+        </div>
+
+        <div className="space-y-2 w-full ml-3">
+          <label htmlFor="division">
+            {t("Division")}:
+          </label>
+          {/* <select
+              className="border px-3 py-2 rounded"
+              {...register("divisionId")}
+            >
+              <option value="">{t(`Select division`)}</option>
+              {fetchDivisions.map((division) => (
+                <option key={division.id} value={division.id}>
+                  {division.name}
+                </option>
+              ))}
+            </select> */}
         </div>
 
         <div id="statusFields" className="flex flex-col space-y-2  w-1/2 gap-2">

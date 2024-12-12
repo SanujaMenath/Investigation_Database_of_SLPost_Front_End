@@ -11,6 +11,8 @@ export const createInvestigation = async ({
   personWhoAcceptedSubmission,
   acceptedSubmissionDate,
   handOveredDateOfSubmission,
+  divisionId,
+  status,
 }: InvestigationProps): Promise<boolean> => {
   const url = `${baseUrl}/api/investigations`;
 
@@ -34,6 +36,8 @@ export const createInvestigation = async ({
     handOveredDateOfSubmission: convertMillisecondsToLocalDateTime(
       handOveredDateOfSubmission
     ),
+    divisionId,
+    status,
   };
 
   const reqOption: RequestInit = {

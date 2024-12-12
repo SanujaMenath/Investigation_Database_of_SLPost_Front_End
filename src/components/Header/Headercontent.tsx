@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import ToggleDarkModeImage from "../../assets/images.jpg";
 import i18n from "../../i18n";
 
@@ -7,8 +8,37 @@ const toggleDarkMode = () => {
   document.documentElement.classList.toggle("dark");
 };
 
+
 const App: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const [userRole, setUserRole] = React.useState("");
+
+  React.useEffect(() => {
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      try {
+        const user = JSON.parse(userString);
+        console.log("Retrieved user from localStorage:", user);
+        setUserRole(user.role?.toUpperCase() || "");
+      } catch (error) {
+        console.error("Error parsing user data from localStorage:", error);
+      }
+    } else {
+      console.warn("No user data found in localStorage.");
+    }
+  }, []);
+  
+
+  const handleLogout = () => {
+    // Clear local storage
+    localStorage.clear();
+    // Clear cookies if any (example)
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Redirect to login page
+    navigate("/login");
+  };
 
   return (
     <div id="wrapper" className="">
@@ -76,12 +106,14 @@ const App: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="/new-investigation/create-New-User"
-                    className="block text-white text-center py-4 px-6 hover:bg-gray-700"
-                  >
-                    {t("Create New User")}
-                  </a>
+                   {/* Render 'Create New User' only if the user is an admin */}
+                {userRole === "ADMIN" && (
+                  <li>
+                    <a href="/new-investigation/create-New-User" className="block text-white text-center py-4 px-6 hover:bg-gray-700">
+                      {t("Create New User")}
+                    </a>
+                  </li>
+                )}
                 </li>
               </ul>
             </li>
@@ -137,12 +169,12 @@ const App: React.FC = () => {
               </a>
             </li>
             <li>
-              <a
-                href="/Login"
+            <button
+                onClick={handleLogout}
                 className="block text-white text-center py-4 px-6 hover:bg-gray-700"
               >
                 {t("Logout")}
-              </a>
+              </button>
             </li>
           </ul>
         </nav>
