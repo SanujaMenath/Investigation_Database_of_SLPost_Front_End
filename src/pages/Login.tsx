@@ -47,11 +47,13 @@ const Login: React.FC = () => {
         token: data.token,
       };
   
-      // Save the entire user object in localStorage
-      localStorage.setItem("user", JSON.stringify(user));
-      console.log("Saved user to localStorage:", user);
+      // Save the entire user object in sessionStorage
+      sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("token", data.token);
+      console.log("Saved user to sessionStorage:", user);
   
       navigate("/"); // Navigate to the home page or dashboard
+      location.reload();
       
     } catch (err: any) {
       console.error("Error during login:", err); 

@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   
   const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated");
+    sessionStorage.removeItem("isAuthenticated");
     navigate("/Login");
   };
 

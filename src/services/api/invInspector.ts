@@ -1,5 +1,6 @@
 import { baseUrl ,InvInspectorProps} from "../api";
 
+
 export const createInvInspector = async({
     name,
     nic
@@ -10,12 +11,14 @@ export const createInvInspector = async({
         name,
         nic,
     };
+    const token = sessionStorage.getItem("token");
 
     const reqOption: RequestInit = {
         method: "POST",
         body: JSON.stringify(rawBody),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       };
     

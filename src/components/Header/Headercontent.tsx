@@ -16,28 +16,29 @@ const App: React.FC = () => {
   const [userRole, setUserRole] = React.useState("");
 
   React.useEffect(() => {
-    const userString = localStorage.getItem("user");
+    const userString = sessionStorage.getItem("user");
     if (userString) {
       try {
         const user = JSON.parse(userString);
-        console.log("Retrieved user from localStorage:", user);
+        console.log("Retrieved user from sessionStorage:", user);
         setUserRole(user.role?.toUpperCase() || "");
       } catch (error) {
-        console.error("Error parsing user data from localStorage:", error);
+        console.error("Error parsing user data from sessionStorage:", error);
       }
     } else {
-      console.warn("No user data found in localStorage.");
+      console.warn("No user data found in sessionStorage.");
     }
   }, []);
   
 
   const handleLogout = () => {
     // Clear local storage
-    localStorage.clear();
+    sessionStorage.clear();
     // Clear cookies if any (example)
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     // Redirect to login page
     navigate("/login");
+    location.reload();
   };
 
   return (

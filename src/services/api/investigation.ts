@@ -1,43 +1,26 @@
 import { convertMillisecondsToLocalDateTime } from "../../utils/date";
 import { InvestigationProps, baseUrl } from "../api";
 
-export const createInvestigation = async ({
-  fileId,
-  incident,
-  incidentDate,
-  dateReferredToInvestigate,
-  dateOfFinalReportIssued,
-  recommendationOfFinalReport,
-  personWhoAcceptedSubmission,
-  acceptedSubmissionDate,
-  handOveredDateOfSubmission,
-  divisionId,
-  status,
-}: InvestigationProps): Promise<boolean> => {
+export const createInvestigation = async (
+  data: InvestigationProps
+): Promise<boolean> => {
   const url = `${baseUrl}/api/investigations`;
 
   const rawBody = {
-    fileId,
-    incident,
-    incidentDate: convertMillisecondsToLocalDateTime(incidentDate),
+    ...data,
+    incidentDate: convertMillisecondsToLocalDateTime(data.incidentDate),
     dateReferredToInvestigate: convertMillisecondsToLocalDateTime(
-      dateReferredToInvestigate
+      data.dateReferredToInvestigate
     ),
     dateOfFinalReportIssued: convertMillisecondsToLocalDateTime(
-      dateOfFinalReportIssued
+      data.dateOfFinalReportIssued
     ),
-    recommendationOfFinalReport,
-
-    personWhoAcceptedSubmission,
-
     acceptedSubmissionDate: convertMillisecondsToLocalDateTime(
-      acceptedSubmissionDate
+      data.acceptedSubmissionDate
     ),
     handOveredDateOfSubmission: convertMillisecondsToLocalDateTime(
-      handOveredDateOfSubmission
+      data.handOveredDateOfSubmission
     ),
-    divisionId,
-    status,
   };
 
   const reqOption: RequestInit = {

@@ -14,13 +14,12 @@ import { createInvestigation } from "../services/api/investigation";
 import { createInterimReport } from "../services/api/interimReport";
 import { createFormalInquiry } from "../services/api/formalInquiry";
 import { createChargeSheet } from "../services/api/chargeSheet";
-import {  fetchDivisions,} from "../services/api/locationService";
+import { fetchDivisions } from "../services/api/locationService";
 import { use } from "i18next";
 import { Watch } from "react-ionicons";
 
 const Investigation: React.FC = () => {
   const { t } = useTranslation();
-
 
   type FormData = InvestigationProps;
 
@@ -85,7 +84,7 @@ const Investigation: React.FC = () => {
 
   const onSubmit = async (data: FormData) => {
     data.divisionId = parseInt(data.divisionId.toString());
-  }
+  };
 
   const [suspectorList, setSuspectorList] = React.useState<Array<Suspector>>();
 
@@ -127,48 +126,11 @@ const Investigation: React.FC = () => {
       <form
         onSubmit={handleSubmit(async (formData) => {
           console.log(formData);
-          const { suspectors,interimReports,formalInquries,chargeSheets,fileId } = formData;
+          const isInvestigationCreated = await createInvestigation(formData);
 
-          let isSuspectorsCreated = false;
-          let isReportCreated = false;
-          let isInquiryCreated = false;
-          let isSheetCreated = false;
-
-          let isInvestigationCreated = false;
-          isInvestigationCreated = await createInvestigation(formData);
-
-          if (isInvestigationCreated) {
-            // Creating suspectors
-            for (const suspector of suspectors) {
-              isSuspectorsCreated = await createSuspector(suspector);
-              console.log(isSuspectorsCreated ? "Suspector created" : "Failed");
-              alert(
-                isSuspectorsCreated
-                  ? "Suspector created !"
-                  : "Unsuccessful Attempt!"
-              );
-            }
-
-            for (const InterimReport of interimReports) {
-              isReportCreated = await createInterimReport({...InterimReport,fileId});
-              console.log(isReportCreated ? "Report created" : "Failed");
-              alert(
-                isReportCreated ? "Report created !" : "Unsuccessful Attempt!"
-              );
-            }
-
-            for (const FormalInquiry of formalInquries) {
-              isInquiryCreated = await createFormalInquiry({...FormalInquiry,fileId});
-              console.log(isInquiryCreated ? "Inquiry created" : "Failed");
-              alert(
-                isInquiryCreated ? "Inquiry created !" : "Unsuccessful Attempt!"
-              );
-            }
-            for (const ChargeSheet of chargeSheets) {
-              isSheetCreated = await createChargeSheet({...ChargeSheet,fileId});
-              console.log(isSheetCreated ? "Inquiry created" : "Failed");
-            }
-          }
+          if (isInvestigationCreated)
+            alert("Investigation Created Successfully!");
+          else alert("Unsuccessful attempt!");
         })}
         className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4"
       >
@@ -179,7 +141,10 @@ const Investigation: React.FC = () => {
           </h1>
           <div className="flex flex-wrap items-center justify-between">
             <div className="flex flex-col space-y-2 w-1/2">
-            <label  className="ml-3" htmlFor="fileId"> {t("File  Number")}</label>
+              <label className="ml-3" htmlFor="fileId">
+                {" "}
+                {t("File  Number")}
+              </label>
               <input
                 type="text"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
@@ -190,7 +155,10 @@ const Investigation: React.FC = () => {
             </div>
 
             <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor="fileId" className="ml-3"> {t("Incident")}</label>
+              <label htmlFor="fileId" className="ml-3">
+                {" "}
+                {t("Incident")}
+              </label>
               <input
                 type="text"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
@@ -200,7 +168,10 @@ const Investigation: React.FC = () => {
             </div>
 
             <div className="flex flex-col space-y-2 w-1/2 mt-3">
-              <label  className="ml-3" htmlFor="incidentDate"> {t("Incident Date")}</label>
+              <label className="ml-3" htmlFor="incidentDate">
+                {" "}
+                {t("Incident Date")}
+              </label>
               <input
                 type="date"
                 className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
@@ -208,7 +179,9 @@ const Investigation: React.FC = () => {
               />
             </div>
             <div className=" space-y-2 w-1/2 mt-3">
-              <label  className="ml-3 " htmlFor="">Date Referred To Investigate</label>
+              <label className="ml-3 " htmlFor="">
+                Date Referred To Investigate
+              </label>
               <input
                 type="date"
                 id="dateReferredToInvestigate"
@@ -440,9 +413,9 @@ const Investigation: React.FC = () => {
             className="bg-[#5964e6]/20 text-[#5964e6] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
             onClick={() =>
               appendInterimReports({
-                fileId:"",
+                fileId: "",
                 interimReportId: "",
-                iiId:"",
+                iiId: "",
                 interdictedDate: "",
                 dateOfInterimReportIssued: "",
                 recommendationOfInterimReport: "",
@@ -493,7 +466,6 @@ const Investigation: React.FC = () => {
                     className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                     placeholder={t("Inv Inspector Id")}
                     {...register(`interimReports.${i}.iiId`)}
-                    
                   />
                 </div>
 
@@ -557,7 +529,7 @@ const Investigation: React.FC = () => {
             onClick={() =>
               appendFormalInquries({
                 formalInquiryId: "",
-                fileId:"",
+                fileId: "",
                 recommendationOfIO: "",
                 dateOfAppoint: "",
                 startedDate: "",
@@ -655,8 +627,8 @@ const Investigation: React.FC = () => {
             onClick={() =>
               appendChargeSheet({
                 chargeSheetId: "",
-                fileId:"",
-                suspectorNic:"",
+                fileId: "",
+                suspectorNic: "",
                 chargeSheetIssuedDate: "",
                 dateOfAnswered: "",
                 dateOfPersonalFileCalled: "",
@@ -757,7 +729,9 @@ const Investigation: React.FC = () => {
                   id={`chargeSheet.${i}.dateOfDisciplinaryOrderTaken`}
                   className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                   placeholder={t("Date of Disciplinary Order Taken")}
-                  {...register(`chargeSheets.${i}.dateOfDisciplinaryOrderTaken`)}
+                  {...register(
+                    `chargeSheets.${i}.dateOfDisciplinaryOrderTaken`
+                  )}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-1/2">
@@ -942,9 +916,7 @@ const Investigation: React.FC = () => {
         </div>
 
         <div className="space-y-2 w-full ml-3">
-          <label htmlFor="division">
-            {t("Division")}:
-          </label>
+          <label htmlFor="division">{t("Division")}:</label>
           {/* <select
               className="border px-3 py-2 rounded"
               {...register("divisionId")}
