@@ -1,4 +1,3 @@
-import axios from "axios";
 import { convertMillisecondsToLocalDateTime } from "../utils/date";
 import { IIAssigmentDTO, InvestigationInspector } from "../@types/api";
 
@@ -126,26 +125,24 @@ export type UpdateReports = {
   dateOfInterimReportIssued: string;
 };
 
+// Fetch search results
 export const getSearchResults = async (keyword: string) => {
   try {
-    const url = baseUrl + `/api/investigations/search?keyword=${keyword}`;
-
-    const reqOption: RequestInit = {
-      method: "GET",
-    };
-
-    const res = await fetch(url, reqOption);
+    const url = `${baseUrl}/api/investigations/search?keyword=${keyword}`;
+    const res = await fetch(url);
 
     if (res.ok) {
       const invList: Array<any> = await res.json();
-
       return invList;
+    } else {
+      console.error(`Failed to fetch search results: ${res.status}`);
     }
   } catch (e) {
     console.error(e);
   }
 };
 
+// Fetch interim report by ID
 const API_URL = "http://localhost:8080/api/interim-report";
 
 type InterimReportData = {
@@ -155,76 +152,120 @@ type InterimReportData = {
 };
 
 export const getInterimReportById = async (id: string) => {
-  const response = await axios.get(`${API_URL}/${id}`);
-  return response.data;
-};
-
-export const updateInterimReport = async (
-  id: string,
-  data: InterimReportData
-) => {
   try {
-    const { interimReportId, interimRecommendation, dateIssued } = data;
-
-    const updatedData = {
-      interimReportId,
-      interimRecommendation,
-      dateIssued,
-    };
-
-    const response = await axios.put(`${API_URL}/${id}`, updatedData);
-    return response.data;
-  } catch (error) {
-    console.error("Update failed:", error);
-    throw error;
-  }
-};
-
-export const getInvestigationInspectors = async (): Promise<
-  Array<InvestigationInspector> | undefined
-> => {
-  try {
-    const url = `${baseUrl}/api/inspectors`;
-
-    const res = await axios.get(url);
-
-    return res.data;
+    const res = await fetch(`${API_URL}/${id}`);
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.error(`Failed to fetch interim report: ${res.status}`);
+    }
   } catch (error) {
     console.error(error);
   }
 };
 
-export const createIIAssignment = async (assignment: IIAssigmentDTO) => {
+// Update interim report
+export const updateInterimReport = async (
+  id: string,
+  data: InterimReportData
+) => {
   try {
-    const investigatorData: IIAssigmentDTO = {
-      caseNo: assignment.caseNo,
-      inspector: assignment.inspector,
-      investigation: assignment.investigation,
-      acquiredDate: convertMillisecondsToLocalDateTime(assignment.acquiredDate),
-      reacquiredDate: convertMillisecondsToLocalDateTime(
-        assignment.reacquiredDate ? assignment.reacquiredDate : "0"
-      ),
-      submittedDate: convertMillisecondsToLocalDateTime(
-        assignment.submittedDate ? assignment.submittedDate : "0"
-      ),
-      resubmittedDate: convertMillisecondsToLocalDateTime(
-        assignment.resubmittedDate ? assignment.resubmittedDate : "0"
-      ),
-    };
+    const updatedData = JSON.stringify(data);
 
-    const reqUrl = `${baseUrl}/api/assignments`;
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    const res = await fetch(reqUrl, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(investigatorData),
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: updatedData,
     });
 
-    if (res.status == 200) alert("II Added");
-    else alert("II not added");
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.error(`Update failed: ${res.status}`);
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Update failed:", error);
   }
 };
+
+// Fetch investigation inspectors
+export const getInvestigationInspectors = async (): Promise<
+  Array<InvestigationInspector> | undefined
+> => {
+  try {
+    const url = `${baseUrl}/api/inspectors`;
+    const res = await fetch(url);
+
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.error(`Failed to fetch inspectors: ${res.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const sendInvestigationData = async (investigationData: InvestigationProps) => {
+  try {
+    const url = `${baseUrl}/api/investigations`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(investigationData), 
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to send data: ${response.statusText}`);
+    }
+
+    const result = await response.json(); 
+    console.log("Investigation Data saved successfully:", result);
+  } catch (error) {
+    console.error("Error while sending investigation data:", error);
+  }
+};
+
+// // Create assignment
+// export const createIIAssignment = async (assignment: IIAssigmentDTO) => {
+//   try {
+//     const investigatorData: IIAssigmentDTO = {
+//       caseNo: assignment.caseNo,
+//       inspector: assignment.inspector,
+//       investigation: assignment.investigation,
+//       acquiredDate: convertMillisecondsToLocalDateTime(assignment.acquiredDate),
+//       reacquiredDate: convertMillisecondsToLocalDateTime(
+//         assignment.reacquiredDate || "0"
+//       ),
+//       submittedDate: convertMillisecondsToLocalDateTime(
+//         assignment.submittedDate || "0"
+//       ),
+//       resubmittedDate: convertMillisecondsToLocalDateTime(
+//         assignment.resubmittedDate || "0"
+//       ),
+//     };
+
+//     const reqUrl = `${baseUrl}/api/assignments`;
+
+//     const res = await fetch(reqUrl, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(investigatorData),
+//     });
+
+//     if (res.ok) {
+//       alert("II Added");
+//     } else {
+//       alert("II not added");
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
