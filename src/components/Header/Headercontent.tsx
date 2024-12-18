@@ -8,12 +8,14 @@ const toggleDarkMode = () => {
   document.documentElement.classList.toggle("dark");
 };
 
-
 const App: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [userRole, setUserRole] = React.useState("");
+  const [isLoggedIn, setIsLoggedIn] = React.useState(
+    !!sessionStorage.getItem("user")
+  );
 
   React.useEffect(() => {
     const userString = sessionStorage.getItem("user");
@@ -29,16 +31,20 @@ const App: React.FC = () => {
       console.warn("No user data found in sessionStorage.");
     }
   }, []);
-  
 
   const handleLogout = () => {
-    // Clear local storage
+    // Clear session storage
     sessionStorage.clear();
-    // Clear cookies if any (example)
+    // Clear cookies
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Update logged-in state
+    setIsLoggedIn(false);
     // Redirect to login page
     navigate("/login");
-    location.reload();
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
   };
 
   return (
@@ -107,14 +113,17 @@ const App: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                   {/* Render 'Create New User' only if the user is an admin */}
-                {userRole === "ADMIN" && (
-                  <li>
-                    <a href="/new-investigation/create-New-User" className="block text-white text-center py-4 px-6 hover:bg-gray-700">
-                      {t("Create New User")}
-                    </a>
-                  </li>
-                )}
+                  {/* Render 'Create New User' only if the user is an admin */}
+                  {userRole === "ADMIN" && (
+                    <li>
+                      <a
+                        href="/new-investigation/create-New-User"
+                        className="block text-white text-center py-4 px-6 hover:bg-gray-700"
+                      >
+                        {t("Create New User")}
+                      </a>
+                    </li>
+                  )}
                 </li>
               </ul>
             </li>
@@ -170,12 +179,21 @@ const App: React.FC = () => {
               </a>
             </li>
             <li>
-            <button
-                onClick={handleLogout}
-                className="block text-white text-center py-4 px-6 hover:bg-gray-700"
-              >
-                {t("Logout")}
-              </button>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  className="block text-white text-center py-4 px-6 hover:bg-gray-700"
+                >
+                  {t("Logout")}
+                </button>
+              ) : (
+                <button
+                  onClick={handleLogin}
+                  className="block text-white text-center py-4 px-6 hover:bg-gray-700"
+                >
+                  {t("Login")}
+                </button>
+              )}
             </li>
           </ul>
         </nav>

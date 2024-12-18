@@ -6,6 +6,8 @@ export const createInvestigation = async (
 ): Promise<boolean> => {
   const url = `${baseUrl}/api/investigations`;
 
+  const token = sessionStorage.getItem("token");
+
   const rawBody = {
     ...data,
     incidentDate: convertMillisecondsToLocalDateTime(data.incidentDate),
@@ -24,10 +26,12 @@ export const createInvestigation = async (
   };
 
   const reqOption: RequestInit = {
+    
     method: "POST",
     body: JSON.stringify(rawBody),
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   };
 

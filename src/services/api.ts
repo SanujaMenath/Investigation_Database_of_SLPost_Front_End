@@ -2,6 +2,7 @@ import { convertMillisecondsToLocalDateTime } from "../utils/date";
 import { IIAssigmentDTO, InvestigationInspector } from "../@types/api";
 
 export const baseUrl = "http://localhost:8080";
+const token = sessionStorage.getItem("token");
 
 export type Suspector = { name: string; nic: string; dob: string };
 
@@ -216,6 +217,7 @@ export const sendInvestigationData = async (investigationData: InvestigationProp
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(investigationData), 
     });
