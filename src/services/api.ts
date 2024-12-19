@@ -197,7 +197,17 @@ export const getInvestigationInspectors = async (): Promise<
 > => {
   try {
     const url = `${baseUrl}/api/inspectors`;
-    const res = await fetch(url);
+    
+    // Retrieve the token 
+    const token = sessionStorage.getItem("token");
+
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+ 
+        Authorization: `Bearer ${token}`, 
+      },
+    });
 
     if (res.ok) {
       return await res.json();
@@ -205,69 +215,11 @@ export const getInvestigationInspectors = async (): Promise<
       console.error(`Failed to fetch inspectors: ${res.status}`);
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching inspectors:", error);
   }
 };
 
-export const sendInvestigationData = async (investigationData: InvestigationProps) => {
-  try {
-    const url = `${baseUrl}/api/investigations`;
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(investigationData), 
-    });
 
-    if (!response.ok) {
-      throw new Error(`Failed to send data: ${response.statusText}`);
-    }
 
-    const result = await response.json(); 
-    console.log("Investigation Data saved successfully:", result);
-  } catch (error) {
-    console.error("Error while sending investigation data:", error);
-  }
-};
 
-// // Create assignment
-// export const createIIAssignment = async (assignment: IIAssigmentDTO) => {
-//   try {
-//     const investigatorData: IIAssigmentDTO = {
-//       caseNo: assignment.caseNo,
-//       inspector: assignment.inspector,
-//       investigation: assignment.investigation,
-//       acquiredDate: convertMillisecondsToLocalDateTime(assignment.acquiredDate),
-//       reacquiredDate: convertMillisecondsToLocalDateTime(
-//         assignment.reacquiredDate || "0"
-//       ),
-//       submittedDate: convertMillisecondsToLocalDateTime(
-//         assignment.submittedDate || "0"
-//       ),
-//       resubmittedDate: convertMillisecondsToLocalDateTime(
-//         assignment.resubmittedDate || "0"
-//       ),
-//     };
-
-//     const reqUrl = `${baseUrl}/api/assignments`;
-
-//     const res = await fetch(reqUrl, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(investigatorData),
-//     });
-
-//     if (res.ok) {
-//       alert("II Added");
-//     } else {
-//       alert("II not added");
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

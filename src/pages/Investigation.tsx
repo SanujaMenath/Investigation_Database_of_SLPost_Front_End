@@ -11,15 +11,13 @@ import Button from "../components/UI/Button";
 import { InvestigationInspector, Suspector } from "../@types/api";
 import { createSuspector } from "../services/api/suspector";
 import { createInvestigation } from "../services/api/investigation";
-import { createInterimReport } from "../services/api/interimReport";
-import { createFormalInquiry } from "../services/api/formalInquiry";
-import { createChargeSheet } from "../services/api/chargeSheet";
 import { fetchDivisions } from "../services/api/locationService";
 import { use } from "i18next";
 import { Watch } from "react-ionicons";
 
 const Investigation: React.FC = () => {
   const { t } = useTranslation();
+  const [divisions, setDivisions] = useState([]);
 
   type FormData = InvestigationProps;
 
@@ -77,14 +75,18 @@ const Investigation: React.FC = () => {
     control,
   });
 
-  const divisionId = Watch("divisionId");
   useEffect(() => {
-    const divisions = fetchDivisions();
-  }, []);
+    const getDivisions = async () => {
+      try {
+        const data = await fetchDivisions();
+        setDivisions(data);
+      } catch (error) {
+        console.error("Error fetching divisions:", error);
+      }
+    };
 
-  const onSubmit = async (data: FormData) => {
-    data.divisionId = parseInt(data.divisionId.toString());
-  };
+    getDivisions();
+  }, []);
 
   const [suspectorList, setSuspectorList] = React.useState<Array<Suspector>>();
 
@@ -311,7 +313,7 @@ const Investigation: React.FC = () => {
                   <Button
                     size="medium"
                     type="button"
-                    className="bg-[#e65959]/20 text-[#e65959] font-medium w- px-3 py-1 text-sm w-[100px] rounded-lg m-2"
+                    className="bg-[#e65959]/20 text-[#e65959] font-medium  px-3 py-1 text-sm w-[100px] rounded-lg m-2"
                     onClick={() => {
                       setInvestigationInspectorList((prev) => {
                         if (prev)
@@ -437,28 +439,28 @@ const Investigation: React.FC = () => {
                   />
                 </div>
 
-                {/* <select
-                id="selectInspector"
-                ref={selectionInsepectorDropdownRef}
-                className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              >
-                <option value={undefined} selected disabled>
-                  Select from here
-                </option>
-                {investigationInspectorList?.map((each) => {
-                  const investigator = [each.name, each.nic];
+                <select
+                  id="selectInspector"
+                  ref={selectionInsepectorDropdownRef}
+                  className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+                >
+                  <option value={undefined} selected disabled>
+                    Select from here
+                  </option>
+                  {investigationInspectorList?.map((each) => {
+                    const investigator = [each.name, each.nic];
 
-                  return (
-                    <option
-                      key={each.nic}
-                      value={each.nic}
-                      disabled={each.disabled}
-                    >
-                      {each.name}
-                    </option>
-                  );
-                })}
-              </select> */}
+                    return (
+                      <option
+                        key={each.nic}
+                        value={each.nic}
+                        disabled={each.disabled}
+                      >
+                        {each.name}
+                      </option>
+                    );
+                  })}
+                </select>
 
                 <div className="flex flex-col space-y-2 w-1/2">
                   <input
@@ -843,16 +845,6 @@ const Investigation: React.FC = () => {
             {...register("dateOfRestateForAppealed")}
           />
         </div>
-        <div className="space-y-2 w-full ml-3">
-          <label htmlFor="dateOfFinalReportIssued">
-            {t("Date Of Final Report Issued ")}:
-          </label>
-          <input
-            type="date"
-            className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-1 "
-            {...register("dateOfFinalReportIssued")}
-          />
-        </div>
 
         <div className="space-y-2 w-full ml-3">
           <label htmlFor="dateOfFinalOrderThatInformedToAccused">
@@ -916,18 +908,29 @@ const Investigation: React.FC = () => {
         </div>
 
         <div className="space-y-2 w-full ml-3">
+          <label htmlFor="dateOfFinalReportIssued">
+            {t("Date Of Final Report Issued ")}:
+          </label>
+          <input
+            type="date"
+            className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-1 "
+            {...register("dateOfFinalReportIssued")}
+          />
+        </div>
+
+        <div className="space-y-2 w-full ml-3">
           <label htmlFor="division">{t("Division")}:</label>
-          {/* <select
-              className="border px-3 py-2 rounded"
-              {...register("divisionId")}
-            >
-              <option value="">{t(`Select division`)}</option>
-              {fetchDivisions.map((division) => (
-                <option key={division.id} value={division.id}>
-                  {division.name}
-                </option>
-              ))}
-            </select> */}
+          <select
+            className="border px-3 py-2 rounded"
+            {...register("divisionId")}
+          >
+            <option value="">{t(`Select division`)}</option>
+            {divisions.map((division: { id: string; name: string }) => (
+              <option key={division.id} value={division.id}>
+                {division.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div id="statusFields" className="flex flex-col space-y-2  w-1/2 gap-2">

@@ -4,7 +4,7 @@ import { InvestigationProps, baseUrl } from "../api";
 export const createInvestigation = async (
   data: InvestigationProps
 ): Promise<boolean> => {
-  const url = `${baseUrl}/api/investigations`;
+  const url = `${baseUrl}/api/investigationform/create`;
 
   const token = sessionStorage.getItem("token");
 
