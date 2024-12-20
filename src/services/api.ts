@@ -9,8 +9,7 @@ export type Suspector = { name: string; nic: string; dob: string };
 export type InterimReport = {
   fileId: string;
   interimReportId: string;
-  iiId: string;
-  interdictedDate: string;
+  nic: string;
   recommendationOfInterimReport: string;
   dateOfInterimReportIssued: string;
 };
@@ -71,11 +70,15 @@ export type InvestigationProps = {
     reAcquiredDate: string;
     reSubmittedDate: string;
   }[];
-
-  appealedAcceptedOrRejected: string;
-  dateOfRestateForAppealed: string;
-  dateOfFinalOrderThatInformedToAccused: string;
-  dateOfAppealedForReinstate: string;
+  // investigationSuspectors: {
+    interdictedDate: string;
+    appealedAcceptedOrRejected: boolean;
+    dateOfRestateForAppealed: string;
+    dateOfFinalOrderThatInformedToAccused: string;
+    dateOfAppealedForReinstate: string;
+    restatedDate: string;
+  // }[];
+ 
 };
 
 export type InvInspectorProps = {
@@ -121,7 +124,7 @@ export type UpdateSheets = {
 
 export type UpdateReports = {
   interimReportId: string;
-  interdictedDate: string;
+  nic: string;
   recommendationOfInterimReport: string;
   dateOfInterimReportIssued: string;
 };

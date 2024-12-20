@@ -270,41 +270,42 @@ const Investigation: React.FC = () => {
             <div className="flex flex-col space-y-2 w-1/2">
               {investigationInspectors.map((inspector, i) => (
                 <div key={inspector.id} className="w-full">
+                  <label className="ml-3 " htmlFor=""> Investigator's NIC </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="text"
-                    placeholder="NIC"
                     disabled
                     {...register(`investigationInspectors.${i}.nic`)}
                   />
+                   <label className="ml-3 " htmlFor=""> Case Number of Investigator </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="text"
                     placeholder="Case No"
                     {...register(`investigationInspectors.${i}.caseNo`)}
                   />
+                   <label className="ml-3 " htmlFor=""> Aquired Date </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
-                    placeholder="Acquired Date"
                     {...register(`investigationInspectors.${i}.acquiredDate`)}
                   />
+                  <label className="ml-3 " htmlFor=""> Submitted Date </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
-                    placeholder="Submitted Date"
                     {...register(`investigationInspectors.${i}.submittedDate`)}
                   />
+                  <label className="ml-3 " htmlFor=""> Reacquired Date </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
-                    placeholder="Reacquired Date"
                     {...register(`investigationInspectors.${i}.reAcquiredDate`)}
                   />
+                  <label className="ml-3 " htmlFor=""> Resubmitted Date </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
-                    placeholder="Resubmitted Date"
                     {...register(
                       `investigationInspectors.${i}.reSubmittedDate`
                     )}
@@ -360,6 +361,8 @@ const Investigation: React.FC = () => {
             {suspectors.map((suspector, i) => (
               <div key={suspector.id} className="suspector border mb-4">
                 <div className="flex flex-col space-y-2 w-full">
+
+                <label className="ml-3 " htmlFor=""> Name of the accused </label>
                   <input
                     id="name"
                     type="text"
@@ -370,19 +373,20 @@ const Investigation: React.FC = () => {
                   />
                 </div>
 
+                <label className="ml-3 " htmlFor=""> NIC number </label>
                 <div className="flex flex-col space-y-2 w-full">
                   <input
                     id="nic"
                     type="text"
                     required
                     className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 w-1/2 !outline-none rounded-lg m-2"
-                    placeholder={t("NIC number")}
+                    placeholder={t("Ex:- 999999999V")}
                     {...register(`suspectors.${i}.nic`)}
                   />
                 </div>
 
                 <div className=" flex flex-col space-y-2 w-1/2">
-                  <label htmlFor="dob">{t("Date of Birth ")}:</label>
+                  <label className="ml-3 " htmlFor="dob">{t("Date of Birth ")}:</label>
                   <input
                     type="date"
                     className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
@@ -417,8 +421,7 @@ const Investigation: React.FC = () => {
               appendInterimReports({
                 fileId: "",
                 interimReportId: "",
-                iiId: "",
-                interdictedDate: "",
+                nic: "",
                 dateOfInterimReportIssued: "",
                 recommendationOfInterimReport: "",
               })
@@ -467,20 +470,11 @@ const Investigation: React.FC = () => {
                     type="text"
                     className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
                     placeholder={t("Inv Inspector Id")}
-                    {...register(`interimReports.${i}.iiId`)}
+                    {...register(`interimReports.${i}.nic`)}
                   />
                 </div>
 
-                <div className=" space-y-2 w-full ml-3">
-                  <label htmlFor="interdictedDate">
-                    {t("Interdicted Date ")}:
-                  </label>
-                  <input
-                    type="date"
-                    className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
-                    {...register(`interimReports.${i}.interdictedDate`)}
-                  />
-                </div>
+                
 
                 <div className="flex flex-col space-y-2 w-full">
                   <textarea
