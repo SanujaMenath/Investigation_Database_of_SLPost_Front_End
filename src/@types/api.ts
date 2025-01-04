@@ -1,4 +1,4 @@
-export type InvestigationInspector = {
+export type InvestigationInspectorResponse = {
   nic: string;
   name: string;
   assignments: Array<any>; // Change any to relevant

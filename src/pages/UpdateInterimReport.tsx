@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { UpdateReports } from "../services/api";
+import { UpdateReports } from "../services/_api";
 import Button from "../components/UI/Button";
 import axios from "axios";
 

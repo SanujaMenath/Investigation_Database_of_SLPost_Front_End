@@ -1,10 +1,48 @@
+import { InvestigationInspectorResponse } from "../@types/api";
 import { convertMillisecondsToLocalDateTime } from "../utils/date";
-import { IIAssigmentDTO, InvestigationInspector } from "../@types/api";
+
 
 export const baseUrl = "http://localhost:8080";
 const token = sessionStorage.getItem("token");
 
+export type Investigation = {
+  fileId: string;
+  incident: string;
+  incidentDate: string;
+  dateReferredToInvestigate: string;
+  dateOfFinalReportIssued: string;
+  recommendationOfFinalReport: string;
+  personWhoAcceptedSubmission: string;
+  acceptedSubmissionDate: string;
+  handOveredDateOfSubmission: string;
+  divisionId: number;
+  status: string;
+  createdBy: string;
+};
+
 export type Suspector = { name: string; nic: string; dob: string };
+
+// src/@types/api/index.ts
+export type InvestigationInspector = {
+
+  nic: string;
+  caseNo: string;
+  acquiredDate: string;
+  submittedDate: string;
+  reAcquiredDate?: string;
+  reSubmittedDate?: string;
+  disabled?: boolean; 
+};
+
+
+export interface InvestigationSuspector  {
+  interdictedDate: string;
+  appealedAcceptedOrRejected: boolean;
+  dateOfRestateForAppealed: string;
+  dateOfFinalOrderThatInformedToAccused: string;
+  dateOfAppealedForReinstate: string;
+  restatedDate: string;
+}
 
 export type InterimReport = {
   fileId: string;
@@ -41,7 +79,7 @@ export type ChargeSheet = {
   aatOrderDescription: string;
 };
 
-export type InvestigationProps = {
+export interface InvestigationProps extends InvestigationSuspector {
   fileId: string;
   incident: string;
   incidentDate: string;
@@ -62,23 +100,7 @@ export type InvestigationProps = {
 
   chargeSheets: ChargeSheet[];
 
-  investigationInspectors: {
-    nic: string;
-    caseNo: string;
-    acquiredDate: string;
-    submittedDate: string;
-    reAcquiredDate: string;
-    reSubmittedDate: string;
-  }[];
-  // investigationSuspectors: {
-    interdictedDate: string;
-    appealedAcceptedOrRejected: boolean;
-    dateOfRestateForAppealed: string;
-    dateOfFinalOrderThatInformedToAccused: string;
-    dateOfAppealedForReinstate: string;
-    restatedDate: string;
-  // }[];
- 
+  investigationInspectors: InvestigationInspector[];
 };
 
 export type InvInspectorProps = {
@@ -196,19 +218,18 @@ export const updateInterimReport = async (
 
 // Fetch investigation inspectors
 export const getInvestigationInspectors = async (): Promise<
-  Array<InvestigationInspector> | undefined
+  InvestigationInspectorResponse[] | undefined
 > => {
   try {
     const url = `${baseUrl}/api/inspectors`;
-    
-    // Retrieve the token 
+
+    // Retrieve the token
     const token = sessionStorage.getItem("token");
 
     const res = await fetch(url, {
       method: "GET",
       headers: {
- 
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -221,8 +242,3 @@ export const getInvestigationInspectors = async (): Promise<
     console.error("Error fetching inspectors:", error);
   }
 };
-
-
-
-
-

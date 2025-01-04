@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { getSearchResults } from "../services/api";
+import { getSearchResults } from "../services/_api";
 
 const Search: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");

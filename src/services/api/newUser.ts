@@ -1,4 +1,4 @@
-import { baseUrl, NewUserDetails } from "../api";
+import { baseUrl, NewUserDetails } from "../_api";
 
 export const createNewUser = async ({
   email,

@@ -6,7 +6,7 @@ import {
   createIIAssignment,
   createInvestigation,
   getInvestigationInspectors,
-} from "../services/api";
+} from "../services/_api";
 import Button from "../components/UI/Button";
 import { InvestigationInspector, Suspector } from "../@types/api";
 

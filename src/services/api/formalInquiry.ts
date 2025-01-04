@@ -1,5 +1,5 @@
 import { convertMillisecondsToLocalDateTime } from "../../utils/date";
-import { FormalInquiry, baseUrl } from "../api";
+import { FormalInquiry, baseUrl } from "../_api";
 
 export const createFormalInquiry = async ({
   formalInquiryId,

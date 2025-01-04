@@ -5,15 +5,17 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   InvestigationProps,
+  Suspector,
   getInvestigationInspectors,
-} from "../services/api";
+} from "../services/_api";
 import Button from "../components/UI/Button";
-import { InvestigationInspector, Suspector } from "../@types/api";
-import { createSuspector } from "../services/api/suspector";
-import { createInvestigation } from "../services/api/investigation";
 import { fetchDivisions } from "../services/api/locationService";
-import { use } from "i18next";
-import { Watch } from "react-ionicons";
+// import { createSuspector } from "../services/api/suspector";
+// import { createInvestigation } from "../services/api/investigation";
+// import { use } from "i18next";
+// import { Watch } from "react-ionicons";
+import { investigationCreationPipeline } from "../services/api";
+import { InvestigationInspectorResponse } from "../@types/api";
 
 const Investigation: React.FC = () => {
   const { t } = useTranslation();
@@ -98,7 +100,7 @@ const Investigation: React.FC = () => {
     React.useState<boolean>(false);
 
   const [investigationInspectorList, setInvestigationInspectorList] =
-    React.useState<Array<InvestigationInspector>>();
+    React.useState<Array<InvestigationInspectorResponse>>();
 
   // States
   const [dateReferredToInvestigate, setDateRefferedToInvestigate] =
@@ -110,7 +112,7 @@ const Investigation: React.FC = () => {
       .then((res) => {
         if (res) {
           setInvestigationInspectorList(
-            res.map((x) => ({ ...x, disabled: false }))
+            res
           );
         }
       })
@@ -128,11 +130,28 @@ const Investigation: React.FC = () => {
       <form
         onSubmit={handleSubmit(async (formData) => {
           console.log(formData);
-          const isInvestigationCreated = await createInvestigation(formData);
-
-          if (isInvestigationCreated)
-            alert("Investigation Created Successfully!");
-          else alert("Unsuccessful attempt!");
+          const isInvestigationCreated = await investigationCreationPipeline({
+            investigation: {
+              dateReferredToInvestigate: formData.dateReferredToInvestigate,
+              acceptedSubmissionDate: formData.acceptedSubmissionDate,
+              dateOfFinalReportIssued: formData.dateOfFinalReportIssued,
+              divisionId: formData.divisionId,
+              fileId: formData.fileId,
+              handOveredDateOfSubmission: formData.handOveredDateOfSubmission,
+              incident: formData.incident,
+              recommendationOfFinalReport: formData.recommendationOfFinalReport,
+              status: formData.status,
+              incidentDate: formData.incidentDate,
+              personWhoAcceptedSubmission: formData.personWhoAcceptedSubmission,
+              createdBy: JSON.parse(sessionStorage.getItem("user")!).userId,
+            },
+            suspectors: formData.suspectors,
+            investigationInspectors: formData.investigationInspectors,
+            interimReports: formData.interimReports,
+            formalInquries: formData.formalInquries,
+            chargeSheets: formData.chargeSheets,
+            investigationSuspectors: [],
+          });
         })}
         className="space-y-4 p-4 dark:bg-gray-900 dark:text-white mx-auto w-full max-w-3xl border-r-4 border-l-4 border-b-4 border-t-4 mb-4"
       >
@@ -222,8 +241,6 @@ const Investigation: React.FC = () => {
                   Select from here
                 </option>
                 {investigationInspectorList?.map((each) => {
-                  const investigator = [each.name, each.nic];
-
                   return (
                     <option
                       key={each.nic}
@@ -270,39 +287,57 @@ const Investigation: React.FC = () => {
             <div className="flex flex-col space-y-2 w-1/2">
               {investigationInspectors.map((inspector, i) => (
                 <div key={inspector.id} className="w-full">
-                  <label className="ml-3 " htmlFor=""> Investigator's NIC </label>
+                  <label className="ml-3 " htmlFor="">
+                    {" "}
+                    Investigator's NIC{" "}
+                  </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="text"
                     disabled
                     {...register(`investigationInspectors.${i}.nic`)}
                   />
-                   <label className="ml-3 " htmlFor=""> Case Number of Investigator </label>
+                  <label className="ml-3 " htmlFor="">
+                    {" "}
+                    Case Number of Investigator{" "}
+                  </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="text"
                     placeholder="Case No"
                     {...register(`investigationInspectors.${i}.caseNo`)}
                   />
-                   <label className="ml-3 " htmlFor=""> Aquired Date </label>
+                  <label className="ml-3 " htmlFor="">
+                    {" "}
+                    Aquired Date{" "}
+                  </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
                     {...register(`investigationInspectors.${i}.acquiredDate`)}
                   />
-                  <label className="ml-3 " htmlFor=""> Submitted Date </label>
+                  <label className="ml-3 " htmlFor="">
+                    {" "}
+                    Submitted Date{" "}
+                  </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
                     {...register(`investigationInspectors.${i}.submittedDate`)}
                   />
-                  <label className="ml-3 " htmlFor=""> Reacquired Date </label>
+                  <label className="ml-3 " htmlFor="">
+                    {" "}
+                    Reacquired Date{" "}
+                  </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
                     {...register(`investigationInspectors.${i}.reAcquiredDate`)}
                   />
-                  <label className="ml-3 " htmlFor=""> Resubmitted Date </label>
+                  <label className="ml-3 " htmlFor="">
+                    {" "}
+                    Resubmitted Date{" "}
+                  </label>
                   <input
                     className="text-[#4a4a4a] border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
                     type="date"
@@ -361,8 +396,10 @@ const Investigation: React.FC = () => {
             {suspectors.map((suspector, i) => (
               <div key={suspector.id} className="suspector border mb-4">
                 <div className="flex flex-col space-y-2 w-full">
-
-                <label className="ml-3 " htmlFor=""> Name of the accused </label>
+                  <label className="ml-3 " htmlFor="">
+                    {" "}
+                    Name of the accused{" "}
+                  </label>
                   <input
                     id="name"
                     type="text"
@@ -373,7 +410,10 @@ const Investigation: React.FC = () => {
                   />
                 </div>
 
-                <label className="ml-3 " htmlFor=""> NIC number </label>
+                <label className="ml-3 " htmlFor="">
+                  {" "}
+                  NIC number{" "}
+                </label>
                 <div className="flex flex-col space-y-2 w-full">
                   <input
                     id="nic"
@@ -386,7 +426,9 @@ const Investigation: React.FC = () => {
                 </div>
 
                 <div className=" flex flex-col space-y-2 w-1/2">
-                  <label className="ml-3 " htmlFor="dob">{t("Date of Birth ")}:</label>
+                  <label className="ml-3 " htmlFor="dob">
+                    {t("Date of Birth ")}:
+                  </label>
                   <input
                     type="date"
                     className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 pr-10 pl-10 "
@@ -451,8 +493,6 @@ const Investigation: React.FC = () => {
                     Select from here
                   </option>
                   {investigationInspectorList?.map((each) => {
-                    const investigator = [each.name, each.nic];
-
                     return (
                       <option
                         key={each.nic}
@@ -473,8 +513,6 @@ const Investigation: React.FC = () => {
                     {...register(`interimReports.${i}.nic`)}
                   />
                 </div>
-
-                
 
                 <div className="flex flex-col space-y-2 w-full">
                   <textarea

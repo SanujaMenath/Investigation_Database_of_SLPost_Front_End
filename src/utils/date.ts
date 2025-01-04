@@ -1,5 +1,6 @@
-export function convertMillisecondsToLocalDateTime(dateString: string): string {
+export function convertMillisecondsToLocalDateTime(dateString?: string): string {
   // Create a Date object from the milliseconds
+  if(!dateString) return '';
   
   if (!isNaN(Date.parse(dateString))) {
       const date = new Date(dateString);

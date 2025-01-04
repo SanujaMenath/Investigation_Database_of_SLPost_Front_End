@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { NewUserDetails } from "../services/api";
+import { NewUserDetails } from "../services/_api";
 import Button from "../components/UI/Button";
 import { createNewUser } from "../services/api/newUser";
 import {

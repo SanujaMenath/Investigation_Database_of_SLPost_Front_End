@@ -1,12 +1,13 @@
-import { Suspector, baseUrl } from "../api";
+import { Suspector, baseUrl } from "../_api";
 import { convertMillisecondsToLocalDateTime } from "../../utils/date";
+import { APIResponse } from ".";
 
 export const createSuspector = async ({
   name,
   dob,
   nic,
-}: Suspector): Promise<boolean> => {
-  const url = `${baseUrl}/api/suspector`;
+}: Suspector): Promise<APIResponse<string>> => {
+  const url = `${baseUrl}/api/suspector/create`;
 
   const rawBody = {
     nic,
@@ -29,7 +30,15 @@ export const createSuspector = async ({
     console.log(error);
   }
 
-  return response?.status === 200 ? true : false;
+  return response?.status === 200 ? 
+    {
+      status: "success",
+      data: await response?.json(),
+    } : 
+    {
+      status: "failure",
+      error: await response?.json(),
+    };
 };
 
 export const deleteSuspector = async () => {};

@@ -1,11 +1,10 @@
-import { InterimReport, baseUrl } from "../api";
+import { InterimReport, baseUrl } from "../_api";
 import { convertMillisecondsToLocalDateTime } from "../../utils/date";
 
 export const createInterimReport = async ({
   fileId,
   interimReportId,
-  iiId,
-  interdictedDate,
+  nic,
   recommendationOfInterimReport,
   dateOfInterimReportIssued,
 }: InterimReport): Promise<boolean> => {
@@ -16,10 +15,9 @@ export const createInterimReport = async ({
       fileId: fileId,
     },
     investigationInspector: {
-      nic: iiId,
+      nic: nic,
     },
     interimReportId,
-    interdictedDate: convertMillisecondsToLocalDateTime(interdictedDate),
     interimRecommendation: recommendationOfInterimReport,
     dateIssued: convertMillisecondsToLocalDateTime(dateOfInterimReportIssued),
   };

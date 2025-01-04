@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { InvInspectorProps } from "../services/api";
+import { InvInspectorProps } from "../services/_api";
 import Button from "../components/UI/Button";
 import { createInvInspector } from "../services/api/invInspector";
 
@@ -9,27 +9,19 @@ function InvestigationInspector() {
 
   type FormData = InvInspectorProps;
 
-  const {
-    register,
-    handleSubmit,
-  } = useForm<FormData>();
+  const { register, handleSubmit } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     let isInspectorCreated = false;
     try {
-      // Assuming you have a function to handle the creation of the inspector
       isInspectorCreated = await createInvInspector(data);
     } catch (error) {
       console.error(error);
     }
     if (isInspectorCreated) {
-      // handle success case
-      console.log("Inspector created successfully");
-      alert("Investigation Inspector created Successfully!")
+      alert("Investigation Inspector created Successfully!");
     } else {
-      // handle failure case
-      console.log("Failed to create inspector");
-      alert("Unsuccessful attempt!")
+      alert("Unsuccessful attempt!");
     }
   };
   return (

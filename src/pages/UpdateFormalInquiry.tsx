@@ -1,6 +1,6 @@
 import {  useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { UpdateInquiries } from '../services/api';
+import { UpdateInquiries } from '../services/_api';
 import Button from "../components/UI/Button";
 
 function UpdateFormalInquiry() {
