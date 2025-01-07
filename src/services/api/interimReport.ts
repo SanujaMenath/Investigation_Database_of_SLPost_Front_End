@@ -12,7 +12,7 @@ export const createInterimReport = async ({
 
   const rawBody = {
     investigation: {
-      fileId: fileId,
+      id: fileId,
     },
     investigationInspector: {
       nic: nic,

@@ -8,6 +8,7 @@ import {
   InvestigationSuspector,
   Suspector,
 } from "../_api";
+import { createInterimReport } from "./interimReport";
 import { createInvestigation } from "./investigation";
 import { createInvInspectorAssignment } from "./invInspector";
 import { createSuspector } from "./suspector";
@@ -76,8 +77,28 @@ export const investigationCreationPipeline = async (
         )
     );
     const investigationInspectorAssignment = await Promise.all(inspectors);
+
+    const allInspectorsCreated = investigationInspectorAssignment.every(
+      (response) => response === true
+    );
+    
+    if (!allInspectorsCreated) {
+      console.error("Failed to create one or more investigation inspectors");
+      return;
+    }
     
     // Interim report creation
+    const interimReportResponses = await Promise.all(
+      request.interimReports.map(async (interimReport) => {
+      
+        return createInterimReport({ ...interimReport});``
+      })
+    );
+
+    const allInterimReportsCreated = interimReportResponses.every(
+      (response) => response === true
+    );
+
 
     // Formal inquiry creation
 
