@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button, DropdownMenu } from "@radix-ui/themes";
-import { navbar } from "../data/navbar";
+import { navbar } from "../../data/navbar";
 
 const Header = () => {
   return (

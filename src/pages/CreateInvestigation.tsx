@@ -1,4 +1,7 @@
 import React from "react";
+import MandatoryFields from "../components/forms/MandatoryFields";
+import InterimReport from "../components/forms/InterimReport";
+import FormalInquiry from "../components/forms/FormalInquiry";
 
 function CreateInvestigation() {
   return (
@@ -6,11 +9,9 @@ function CreateInvestigation() {
       <h1 className="text-4xl">Create Investigation</h1>
 
       <form action="" method="post">
-        <fieldset>
-          <legend>Mandatory Fields:</legend>
-          <label htmlFor="File Number">File Number</label>
-          <input type="text" name="File Number" id="File Number" />
-        </fieldset>
+        <MandatoryFields/>
+        <InterimReport/>
+        <FormalInquiry/>
       </form>
     </div>
   );

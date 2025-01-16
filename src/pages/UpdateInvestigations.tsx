@@ -1,10 +1,11 @@
 import React from 'react'
+import Chargesheet from '../components/forms/Chargesheet'
 
 function UpdateInvestigations() {
   return (
-    <div>
-      Hello
-    </div>
+    <>
+      <Chargesheet />
+    </>
   )
 }
 
