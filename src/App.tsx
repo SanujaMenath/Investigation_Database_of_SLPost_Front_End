@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import CreateInvestigation from "./pages/CreateInvestigation";
 import UpdateInvestigations from "./pages/UpdateInvestigations";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreateNewUser from "./components/forms/CreateNewUser";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/update-charge-sheets" element={<Login />} />
           <Route path="/advanced-search" element={<Login />} />
           <Route path="/detailed-reports" element={<Login />} />
+          <Route path="/create-new-user" element={<CreateNewUser />} />
         </Route>
       </Routes>
     </BrowserRouter>
