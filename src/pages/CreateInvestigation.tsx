@@ -1,7 +1,7 @@
-import React from "react";
 import MandatoryFields from "../components/forms/MandatoryFields";
 import InterimReport from "../components/forms/InterimReport";
 import FormalInquiry from "../components/forms/FormalInquiry";
+import SecondaryFields from "../components/forms/SecondaryFields";
 
 function CreateInvestigation() {
   return (
@@ -10,6 +10,7 @@ function CreateInvestigation() {
 
       <form action="" method="post">
         <MandatoryFields/>
+        <SecondaryFields/>
         <InterimReport/>
         <FormalInquiry/>
       </form>
