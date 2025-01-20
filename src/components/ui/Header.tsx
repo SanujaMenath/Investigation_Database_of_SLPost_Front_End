@@ -14,20 +14,29 @@ const Header = () => {
       <nav className="h-10 flex gap-2 my-2">
         {navbar.map((navItem) => (
           <DropdownMenu.Root key={navItem.headItem.name}>
-            <DropdownMenu.Trigger>
-              <Button variant="soft">
-                {navItem.headItem.name}
-                {navItem.subItems && <DropdownMenu.TriggerIcon />}
-              </Button>
-            </DropdownMenu.Trigger>
+            {navItem.subItems ? (
+              <DropdownMenu.Trigger >
+                <Button variant="soft">
+                  {navItem.headItem.name}
+                  <DropdownMenu.TriggerIcon />
+                </Button>
+              </DropdownMenu.Trigger>
+            ) : (
+              <Link to={navItem.headItem.url}>
+                <Button variant="soft">{navItem.headItem.name}</Button>
+              </Link>
+            )}
 
-            <DropdownMenu.Content>
-              {navItem.subItems?.map((subItem, index) => (
-                <DropdownMenu.Item key={index} shortcut="🖉">
-                  <Link to={subItem.url}>{subItem.name}</Link>
-                </DropdownMenu.Item>
-              ))}
-            </DropdownMenu.Content>
+            {/* Dropdown Content for subItems */}
+            {navItem.subItems && (
+              <DropdownMenu.Content>
+                {navItem.subItems.map((subItem, index) => (
+                  <DropdownMenu.Item key={index}>
+                    <Link to={subItem.url}>{subItem.name}</Link>
+                  </DropdownMenu.Item>
+                ))}
+              </DropdownMenu.Content>
+            )}
           </DropdownMenu.Root>
         ))}
       </nav>
