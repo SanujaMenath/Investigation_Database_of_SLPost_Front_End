@@ -7,16 +7,17 @@ import Header from "../components/ui/Header";
 function CreateInvestigation() {
   return (
     <div>
-       <Header />
-      <h1 className="text-4xl">Create Investigation</h1>
+      <Header />
+      <div className="flex flex-col items-center min-h-screen bg-indigo-50">
+        <h1 className="text-4xl text-indigo-900 font-medium mt-4">Create Investigation</h1>
 
-      <form action="" method="post">
-       
-        <MandatoryFields />
-        <SecondaryFields />
-        <InterimReport />
-        <FormalInquiry />
-      </form>
+        <form className="space-y-4 p-4 mx-auto w-full max-w-3xl border rounded mb-4 mt-6">
+          <MandatoryFields />
+          <SecondaryFields />
+          <InterimReport />
+          <FormalInquiry />
+        </form>
+      </div>
     </div>
   );
 }

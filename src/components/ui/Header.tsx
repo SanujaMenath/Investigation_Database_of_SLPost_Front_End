@@ -5,13 +5,15 @@ import { navbar } from "../../data/navbar";
 const Header = () => {
   return (
     <>
+      <div className="mt-3 border-b-2 border-solid border-indigo-300">
       <img
         src="https://slpost.gov.lk/wp-content/uploads/2019/10/DOP_header.png"
         alt="Department of Posts"
         className="mx-auto "
       />
+      </div>
 
-      <nav className="h-10 flex gap-2 my-2">
+      <nav className="h-10 flex gap-2 my-2 ml-4">
         {navbar.map((navItem) => (
           <DropdownMenu.Root key={navItem.headItem.name}>
             {navItem.subItems ? (

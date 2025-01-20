@@ -1,61 +1,98 @@
-import React from 'react'
 
-function MandatoryFields() {
+
+const MandatoryFields = () => {
   return (
-    <>
-       <fieldset>
-          <div id="mandatoryFields" className="flex flex-col w-full gap-2">
-          <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
-            Mandatory Fields
-          </h1>
-          <div className="flex flex-wrap items-center justify-between">
-            <div className="flex flex-col space-y-2 w-1/2">
-              <label className="ml-3" htmlFor="fileId">
-                File  Number
+    <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
+      <fieldset>
+        <div className="space-y-6">
+          {/* Section Header */}
+          <div className="border-b border-indigo-100 pb-4">
+            <h2 className="text-xl font-semibold text-indigo-900">
+              Mandatory Fields
+            </h2>
+            <p className="mt-1 text-sm text-indigo-600">
+              Please fill in all required information
+            </p>
+          </div>
+
+          {/* Form Layout - Two fields per row */}
+          <div className="flex flex-wrap -mx-3">
+            {/* Row 1 */}
+            <div className="w-full md:w-1/2 px-3 mb-6">
+              <label 
+                htmlFor="fileId" 
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                File Number <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-                placeholder="Ex:- Inv/01"
+                id="fileId"
+                placeholder="Ex: Inv/01"
                 required
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30 placeholder-indigo-300"
               />
             </div>
 
-            <div className="flex flex-col space-y-2 w-1/2">
-              <label htmlFor="fileId" className="ml-3">
-                "Incident"
+            <div className="w-full md:w-1/2 px-3 mb-6">
+              <label 
+                htmlFor="incident" 
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                Incident <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-                placeholder="Ex:- Vehcle Accident"
+                id="incident"
+                placeholder="Ex: Vehicle Accident"
+                required
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30 placeholder-indigo-300"
               />
             </div>
 
-            <div className="flex flex-col space-y-2 w-1/2 mt-3">
-              <label className="ml-3" htmlFor="incidentDate">
-                Incident Date
+            {/* Row 2 */}
+            <div className="w-full md:w-1/2 px-3 mb-6">
+              <label 
+                htmlFor="incidentDate" 
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                Incident Date <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
-                className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
+                id="incidentDate"
+                required
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30"
               />
             </div>
-            <div className=" space-y-2 w-1/2 mt-3">
-              <label className="ml-3 " htmlFor="">
-                Date Referred To Investigate
+
+            <div className="w-full md:w-1/2 px-3 mb-6">
+              <label 
+                htmlFor="dateReferred" 
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                Date Referred To Investigate <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
-                id="dateReferredToInvestigate"
-                className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2 w-full"
+                id="dateReferred"
+                required
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30"
               />
             </div>
           </div>
         </div>
-        </fieldset>
-    </>
-  )
-}
+      </fieldset>
+    </div>
+  );
+};
 
-export default MandatoryFields
+export default MandatoryFields;

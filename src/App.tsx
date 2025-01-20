@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import CreateInvestigation from "./pages/CreateInvestigation";
 import UpdateInvestigations from "./pages/UpdateInvestigations";
 import ProtectedRoute from "./components/ProtectedRoute";
-import CreateNewUser from "./components/forms/CreateNewUser";
+import CreateNewUser from "./components/forms/CreateUser";
 import AdvancedSearch from "./pages/AdvancedSearch";
 import DetailedReport from "./pages/DetailedReport";
 import CreateInvInspector from "./components/forms/CreateInvInpector";
@@ -33,7 +33,7 @@ function App() {
           <Route path="/update-charge-sheets" element={<Login />} />
           <Route path="/advanced-search" element={<AdvancedSearch />} />
           <Route path="/detailed-reports" element={<DetailedReport />} />
-          <Route path="/create-new-user" element={<CreateNewUser />} />
+          <Route path="/create-user" element={<CreateNewUser />} />
         </Route>
       </Routes>
     </BrowserRouter>

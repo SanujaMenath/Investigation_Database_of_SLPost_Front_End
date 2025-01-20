@@ -27,9 +27,19 @@ export const navbar: NavBar[] = [
     },
     subItems: [
       {
+        name: "Create User",
+        url: "/create-user",
+        accessLevel: ["admin"],
+      },
+      {
         name: "Create Investigation",
         url: "/create-investigation",
         accessLevel: ["clerk", "admin"],
+      },
+      {
+        name: "Create Investigation Inspector",
+        url: "/create-investigation-inspector",
+        accessLevel: ["admin"],
       },
       {
         name: "Update Investigations",
@@ -37,18 +47,8 @@ export const navbar: NavBar[] = [
         accessLevel: ["clerk", "admin"],
       },
       {
-        name: "Update Investigation Assignments",
-        url: "/update-investigation-assignments",
-        accessLevel: ["clerk", "admin"],
-      },
-      {
         name: "Update Suspectors",
         url: "/update-suspectors",
-        accessLevel: ["admin"],
-      },
-      {
-        name: "Create Investigation Inspector",
-        url: "/create-investigation-inspector",
         accessLevel: ["admin"],
       },
       {
@@ -64,6 +64,11 @@ export const navbar: NavBar[] = [
       {
         name: "Update Charge Sheets",
         url: "/update-charge-sheets",
+        accessLevel: ["clerk", "admin"],
+      },
+      {
+        name: "Update Investigation Assignments",
+        url: "/update-investigation-assignments",
         accessLevel: ["clerk", "admin"],
       },
     ],

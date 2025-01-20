@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@radix-ui/themes";
 import { createInvInspector } from "../../services/invInspector";
+import Header from "../ui/Header";
 
 function CreateInvInspector() {
   const [formData, setFormData] = useState({ name: "", nic: "" });
@@ -40,8 +41,10 @@ function CreateInvInspector() {
   };
 
   return (
+    <>
+    <Header/>
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-8 px-4 sm:px-6 lg:px-8">
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-2xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-indigo-900 sm:text-4xl">
@@ -58,10 +61,10 @@ function CreateInvInspector() {
         className="bg-white shadow-xl rounded-lg p-6 space-y-6 border border-indigo-100"
       >
         {/* Name Field */}
-        <div className="space-y-2">
+        <div className="space-y-2 ">
           <label 
             htmlFor="name"
-            className="block text-sm font-medium text-indigo-700"
+            className="block font-medium text-indigo-700"
           >
             Investigation Inspector's Name
           </label>
@@ -82,7 +85,7 @@ function CreateInvInspector() {
         <div className="space-y-2">
           <label 
             htmlFor="nic"
-            className="block text-sm font-medium text-indigo-700"
+            className="block font-medium text-indigo-700"
           >
             Investigation Inspector's NIC
           </label>
@@ -125,6 +128,7 @@ function CreateInvInspector() {
       </form>
     </div>
   </div>
+  </>
   );
 }
 
