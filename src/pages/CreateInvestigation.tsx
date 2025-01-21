@@ -5,6 +5,7 @@ import SecondaryFields from "../components/forms/SecondaryFields";
 import Header from "../components/ui/Header";
 import Chargesheet from "../components/forms/Chargesheet";
 import CreateSuspector from "../components/forms/CreateSuspector";
+import IIAssignment from "../components/forms/IIAssignment";
 
 function CreateInvestigation() {
   return (
@@ -22,6 +23,7 @@ function CreateInvestigation() {
           <Chargesheet />
           <FormalInquiry />
           <CreateSuspector />
+          <IIAssignment />
         </form>
       </div>
     </div>

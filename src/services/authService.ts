@@ -1,22 +1,8 @@
 import { useNavigate } from 'react-router-dom';
+import { JWTPayload, LoginResponse } from '../@types/auth-types';
 
 export const baseUrl = "http://localhost:8080";
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
 
-export interface LoginResponse {
-  email: string;
-  userId: number;
-  token: string;
-}
-
-export interface JWTPayload {
-  role: string;
-  sub: string;
-  exp: number; 
-}
 
 class AuthError extends Error {
   constructor(message: string) {
