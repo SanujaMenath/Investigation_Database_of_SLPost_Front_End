@@ -3,6 +3,7 @@ import InterimReport from "../components/forms/InterimReport";
 import FormalInquiry from "../components/forms/FormalInquiry";
 import SecondaryFields from "../components/forms/SecondaryFields";
 import Header from "../components/ui/Header";
+import Chargesheet from "../components/forms/Chargesheet";
 
 function CreateInvestigation() {
   return (
@@ -15,6 +16,7 @@ function CreateInvestigation() {
           <MandatoryFields />
           <SecondaryFields />
           <InterimReport />
+          <Chargesheet />
           <FormalInquiry />
         </form>
       </div>

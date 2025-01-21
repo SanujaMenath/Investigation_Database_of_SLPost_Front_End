@@ -65,7 +65,7 @@ const InterimReport = () => {
             </label>
             <textarea
               id="recommendation"
-              rows={4}
+              rows={3}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30 placeholder-indigo-300 resize-none"

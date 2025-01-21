@@ -13,7 +13,7 @@ export type investigation = {
     createdBy: number;
 }
 
-export interface InvestigationSuspector  {
+export type InvestigationSuspector = {
     interdictedDate: string;
     appealedAcceptedOrRejected: boolean;
     dateOfRestateForAppealed: string;

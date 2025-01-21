@@ -15,7 +15,7 @@ export const navbar: NavBar[] = [
   {
     headItem: {
       name: "Home",
-      url: "/home",
+      url: "/",
       accessLevel: ["anyone"],
     },
   },

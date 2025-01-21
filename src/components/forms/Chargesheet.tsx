@@ -1,148 +1,138 @@
-function Chargesheet() {
+const ChargeSheetForm = () => {
   return (
-    <>
-      {/* Charge Sheet Fields */}
-      <div id="chargeSheetFields" className="flex flex-col w-full gap-2">
-        <h1 className="text-lg text-[#4a4a4a] font-medium ml-2">
-          Charge Sheet
-        </h1>
-
-        <div id="chargeSheetContainer" className="flex flex-col w-full gap-2">
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Charge Sheet Id"
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2 w-1/2">
-            <input
-              type="text"
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Nic of accused person"
-            />
-          </div>
-
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`chargeSheetIssuedDate`}>
-              Charge Sheet Issued Date
-            </label>
-            <input
-              type="date"
-              id={`.chargeSheetIssuedDate`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Charge Sheet Issued Date"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfAnswered`}>Date of Answered</label>
-            <input
-              type="date"
-              id={`dateOfAnswered`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of Answered"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfPersonalFileCalled`}>
-              Date of Personal File Called
-            </label>
-            <input
-              type="date"
-              id={`dateOfPersonalFileCalled`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of Personal File Called"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfPersonalReturned`}>
-              "Date of Personal Returned":
-            </label>
-            <input
-              type="date"
-              id={`dateOfPersonalReturned`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of Personal Returned"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfDisciplinaryOrderTaken`}>
-              Date of Disciplinary Order Taken:
-            </label>
-            <input
-              type="date"
-              id={`dateOfDisciplinaryOrderTaken`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of Disciplinary Order Taken"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfAppealedForPSC`}>
-              Date of Appealed For PSC:
-            </label>
-            <input
-              type="date"
-              id={`dateOfAppealedForPSC`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of Appealed For PSC"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`pscOrderDescription`}>
-              PSC Order Description:
-            </label>
-            <textarea
-              id={`pscOrderDescription`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="PSC Order Description"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfPSCOrderTaken`}>
-              Date of PSC Order Taken
-            </label>
-            <input
-              type="date"
-              id={`dateOfPSCOrderTaken`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of PSC Order Taken"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfAppealedToAAT`}>
-              "Date of Appealed To AAT"
-            </label>
-            <input
-              type="date"
-              id={`dateOfAppealedToAAT`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of Appealed To AAT"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`dateOfAATOrderTaken`}>
-              "Date of AAT Order Taken"
-            </label>
-            <input
-              type="date"
-              id={`dateOfAATOrderTaken`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="Date of AAT Order Taken"
-            />
-          </div>
-          <div className="flex flex-col space-y-2 w-1/2">
-            <label htmlFor={`aatOrderDescription`}>AAT Order Description</label>
-            <textarea
-              id={`aatOrderDescription`}
-              className="border border-[#4a4a4a]/30 px-3 py-2 bg-[#4a4a4a]/5 !outline-none rounded-lg m-2"
-              placeholder="AAT Order Description"
-            />
-          </div>
+    <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
+      <div className="space-y-6">
+        {/* Section Header */}
+        <div className="border-b border-indigo-100 pb-4">
+          <h2 className="text-xl font-semibold text-indigo-900">
+            Charge Sheet Details
+          </h2>
+          <p className="mt-1 text-sm text-indigo-600">
+            Please fill in all charge sheet information
+          </p>
         </div>
-      </div>
-    </>
-  );
-}
 
-export default Chargesheet;
+        <fieldset>
+          <div className="flex flex-wrap -mx-3">
+            {/* Row 1 */}
+            <div className="w-full md:w-1/2 px-3 mb-6">
+              <label
+                htmlFor="chargeSheetId"
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                Charge Sheet ID <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="chargeSheetId"
+                placeholder="Enter charge sheet ID"
+                required
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30 placeholder-indigo-300"
+              />
+            </div>
+
+            <div className="w-full md:w-1/2 px-3 mb-6">
+              <label
+                htmlFor="nicAccused"
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                NIC of Accused Person <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="nicAccused"
+                placeholder="Enter NIC number"
+                required
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30 placeholder-indigo-300"
+              />
+            </div>
+
+            {/* Date Fields */}
+            {[
+              {
+                id: "chargeSheetIssuedDate",
+                label: "Charge Sheet Issued Date",
+              },
+              { id: "dateOfAnswered", label: "Date of Answered" },
+              {
+                id: "dateOfPersonalFileCalled",
+                label: "Date of Personal File Called",
+              },
+              {
+                id: "dateOfPersonalReturned",
+                label: "Date of Personal Returned",
+              },
+              {
+                id: "dateOfDisciplinaryOrderTaken",
+                label: "Date of Disciplinary Order Taken",
+              },
+              { id: "dateOfAppealedForPSC", label: "Date of Appealed For PSC" },
+              { id: "dateOfPSCOrderTaken", label: "Date of PSC Order Taken" },
+              { id: "dateOfAppealedToAAT", label: "Date of Appealed To AAT" },
+              { id: "dateOfAATOrderTaken", label: "Date of AAT Order Taken" },
+            ].map((field) => (
+              <div key={field.id} className="w-full md:w-1/2 px-3 mb-6">
+                <label
+                  htmlFor={field.id}
+                  className="block text-sm font-medium text-indigo-700 mb-2"
+                >
+                  {field.label} 
+                </label>
+                <input
+                  type="date"
+                  id={field.id}
+                  className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                           focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                           transition-colors bg-indigo-50/30"
+                />
+              </div>
+            ))}
+
+            {/* Textarea Fields */}
+            <div className="w-full px-3 mb-6">
+              <label
+                htmlFor="pscOrderDescription"
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                PSC Order Description 
+              </label>
+              <textarea
+                id="pscOrderDescription"
+                placeholder="Enter PSC order description"
+                rows={3}
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30 placeholder-indigo-300
+                         resize-none"
+              />
+            </div>
+
+            <div className="w-full px-3 mb-6">
+              <label
+                htmlFor="aatOrderDescription"
+                className="block text-sm font-medium text-indigo-700 mb-2"
+              >
+                AAT Order Description 
+              </label>
+              <textarea
+                id="aatOrderDescription"
+                placeholder="Enter AAT order description"
+                rows={3}
+                className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
+                         focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                         transition-colors bg-indigo-50/30 placeholder-indigo-300
+                         resize-none"
+              />
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  );
+};
+
+export default ChargeSheetForm;

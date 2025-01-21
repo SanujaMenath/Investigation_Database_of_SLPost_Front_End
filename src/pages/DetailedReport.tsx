@@ -1,10 +1,14 @@
-import React from 'react'
+
+import Header from "../components/ui/Header";
 function DetailedReport() {
   return (
     <div>
-      heloo
+      <div>
+        <Header />
+      </div>
+      <h1>Generate Reports</h1>
     </div>
-  )
+  );
 }
 
 export default DetailedReport;
