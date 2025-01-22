@@ -6,6 +6,7 @@ import Header from "../components/ui/Header";
 import Chargesheet from "../components/forms/Chargesheet";
 import CreateSuspector from "../components/forms/CreateSuspector";
 import IIAssignment from "../components/forms/IIAssignment";
+import InvSuspectsForm from "../components/forms/InvSuspectsForm";
 
 function CreateInvestigation() {
   return (
@@ -24,6 +25,7 @@ function CreateInvestigation() {
           <FormalInquiry />
           <CreateSuspector />
           <IIAssignment />
+          <InvSuspectsForm />
         </form>
       </div>
     </div>
