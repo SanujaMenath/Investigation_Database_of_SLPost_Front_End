@@ -2,9 +2,11 @@ import { Box, Container, Text } from "@radix-ui/themes";
 import { useSearch } from "../services/search";
 import { SearchBar } from "../components/search/SearchBar";
 import Header from "../components/ui/Header";
+import { useState } from "react";
 
 export default function AdvancedSearch() {
-  const { results, error, setFilters, performSearch } = useSearch();
+  const { results, error, filters, setFilters, performSearch } = useSearch();
+  const [searchValue, setSearchValue] = useState("");
 
   return (
     <div>
@@ -22,18 +24,42 @@ export default function AdvancedSearch() {
             </div>
 
             <SearchBar
-              onSearch={performSearch}
-              onFilterChange={(type) => setFilters((prev) => ({ ...prev, type, value: "" }))}
+              searchValue={searchValue}
+              onSearchValueChange={setSearchValue}
+              onSearch={() => {
+                setFilters({
+                  type: filters?.type || "fileNumber",
+                  value: searchValue,
+                });
+                performSearch();
+              }}
+              onFilterChange={(type) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  type,
+                  value: "",
+                }))
+              }
             />
 
             <Box mt="6">
               {error && <Text color="red">{error}</Text>}
               {results.map((result) => (
-                  <Box key={result.id} p="4" mb="2" className="bg-white shadow rounded">
-                    <h2 className="text-lg font-semibold text-indigo-800"></h2>
-                    <p className="text-sm text-gray-600"></p>
-                  </Box>
-                ))}
+                <Box
+                  key={result.id}
+                  p="4"
+                  mb="2"
+                  className="bg-white shadow rounded"
+                >
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    {result.fileId}
+                  </h2>
+                  <p className="text-base text-gray-600">
+                    Incident: {result.incident} <br />
+                    Incident Date: {result.incidentDate}
+                  </p>
+                </Box>
+              ))}
             </Box>
           </Box>
         </Container>

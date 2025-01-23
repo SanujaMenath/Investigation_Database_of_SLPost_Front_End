@@ -7,8 +7,11 @@ export interface SearchFilters {
 
 export interface SearchResult {
   id: string;
-  fileNumber: string;
-  nic: string;
+  fileId: string;
+  incident: string;
   incidentDate: string;
+  dateReferredToInvestigate: string;
+  dateOfFinalReportIssued: string;
+  status: string;
   // Add other properties as needed
 }

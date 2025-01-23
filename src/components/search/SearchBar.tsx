@@ -6,9 +6,16 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 interface SearchBarProps {
   onSearch: () => void;
   onFilterChange: (type: FilterType) => void;
+  searchValue: string;
+  onSearchValueChange: (value: string) => void;
 }
 
-export const SearchBar = ({ onSearch, onFilterChange }: SearchBarProps) => {
+export const SearchBar = ({ 
+  onSearch, 
+  onFilterChange, 
+  searchValue, 
+  onSearchValueChange 
+}: SearchBarProps) => {
   return (
     <Flex gap="3" align="center">
       <Box>
@@ -16,6 +23,8 @@ export const SearchBar = ({ onSearch, onFilterChange }: SearchBarProps) => {
           size="3"
           radius="full"
           placeholder="Search case files..."
+          value={searchValue}
+          onChange={(e) => onSearchValueChange(e.target.value)}
         >
           <TextField.Slot>
             <MagnifyingGlassIcon />

@@ -13,6 +13,7 @@ export const useSearch = () => {
       setError("Filters are invalid or incomplete.");
       return;
     }
+    console.log("Filters before search:", filters);
 
     setLoading(true);
     setError(null);
