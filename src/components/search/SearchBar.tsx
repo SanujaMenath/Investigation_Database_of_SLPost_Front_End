@@ -4,14 +4,14 @@ import { FilterType } from "../../@types/search";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 interface SearchBarProps {
-  onSearch: () => void;
+  onSearchButtonClicked: () => void;
   onFilterChange: (type: FilterType) => void;
   searchValue: string;
   onSearchValueChange: (value: string) => void;
 }
 
 export const SearchBar = ({ 
-  onSearch, 
+  onSearchButtonClicked, 
   onFilterChange, 
   searchValue, 
   onSearchValueChange 
@@ -35,7 +35,7 @@ export const SearchBar = ({
         </TextField.Root>
       </Box>
       <div className="border border-indigo-500 rounded-full">
-        <Button size="3" variant="soft" radius="full" onClick={onSearch}>
+        <Button size="3" variant="soft" radius="full" onClick={onSearchButtonClicked}>
           Search
         </Button>
       </div>

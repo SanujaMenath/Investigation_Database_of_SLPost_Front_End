@@ -1,67 +1,70 @@
 import { Box, Container, Text } from "@radix-ui/themes";
-import { useSearch } from "../services/search";
 import { SearchBar } from "../components/search/SearchBar";
 import Header from "../components/ui/Header";
 import { useState } from "react";
+import { SearchService } from "../services/search";
+import { SearchQuery, SearchResult } from "../@types/search";
 
 export default function AdvancedSearch() {
-  const { results, error, filters, setFilters, performSearch } = useSearch();
-  const [searchValue, setSearchValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState<SearchQuery>({
+    filterType: "fileNumber",
+    searchValue: "",
+  });
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [messages, setMessages] = useState<string[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
+
+  const handleSearch = async () => {
+    const apiResponse = await SearchService.search(searchQuery);
+
+    if (apiResponse.success && apiResponse.data) {
+      setSearchResults(apiResponse.data);
+      setMessages((prev) => [...prev, apiResponse.message || ""]);
+    } else {
+      setErrors((prev) => [...prev, apiResponse.error || ""]);
+    }
+  };
+
+  console.log({
+    searchResults,
+    messages,
+    errors,
+  });
 
   return (
     <div>
       <Header />
       <div className="flex flex-col items-center min-h-screen bg-indigo-50 py-3 mb-4">
         <Container size="3">
-          <Box py="6">
-            <div className="mb-6">
-              <h1 className="text-2xl text-indigo-900 font-bold mb-1">
-                Search & Filter
-              </h1>
-              <p className="text-sm text-indigo-600">
-                Select the filter type and enter the search term.
-              </p>
-            </div>
+          <div className="mb-6">
+            <h1 className="text-2xl text-indigo-900 font-bold mb-1">
+              Search & Filter
+            </h1>
+            <p className="text-sm text-indigo-600">
+              Select the filter type and enter the search term.
+            </p>
+          </div>
 
-            <SearchBar
-              searchValue={searchValue}
-              onSearchValueChange={setSearchValue}
-              onSearch={() => {
-                setFilters({
-                  type: filters?.type || "fileNumber",
-                  value: searchValue,
-                });
-                performSearch();
-              }}
-              onFilterChange={(type) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  type,
-                  value: "",
-                }))
-              }
-            />
+          <SearchBar
+            searchValue={searchQuery.searchValue}
+            onSearchValueChange={(updatedValue) => {
+              setSearchQuery((prev) => ({
+                filterType: prev.filterType || "fileNumber",
+                searchValue: updatedValue,
+              }));
+            }}
+            onSearchButtonClicked={async () => {
+              await handleSearch();
+            }}
+            onFilterChange={(type) =>
+              setSearchQuery((prev) => ({
+                filterType: type,
+                searchValue: prev.searchValue,
+              }))
+            }
+          />
 
-            <Box mt="6">
-              {error && <Text color="red">{error}</Text>}
-              {results.map((result) => (
-                <Box
-                  key={result.id}
-                  p="4"
-                  mb="2"
-                  className="bg-white shadow rounded"
-                >
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {result.fileId}
-                  </h2>
-                  <p className="text-base text-gray-600">
-                    Incident: {result.incident} <br />
-                    Incident Date: {result.incidentDate}
-                  </p>
-                </Box>
-              ))}
-            </Box>
-          </Box>
+          <div>{messages[messages.length - 1]}</div>
         </Container>
       </div>
     </div>

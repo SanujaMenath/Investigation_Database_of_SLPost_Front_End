@@ -1,8 +1,8 @@
-import { baseUrl } from "./authService";
+import { API_PREFIX } from "../constants";
 
 export const createInvInspector = async (data: any) => {
   try {
-    const response = await fetch(`${baseUrl}/api/inspectors`, {
+    const response = await fetch(`${API_PREFIX}/inspectors`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -10,7 +10,7 @@ export const createInvInspector = async (data: any) => {
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }

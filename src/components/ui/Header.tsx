@@ -13,7 +13,7 @@ const Header = () => {
       />
       </div>
 
-      <nav className="h-10 flex gap-2 my-2 ml-4">
+      <nav className="h-10 flex gap-2 my-2 ml-4 justify-center">
         {navbar.map((navItem) => (
           <DropdownMenu.Root key={navItem.headItem.name}>
             {navItem.subItems ? (

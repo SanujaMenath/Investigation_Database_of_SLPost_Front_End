@@ -1,8 +1,8 @@
-export type FilterType = 'fileNumber' | 'nic' | 'incidentDate';
+export type FilterType = "fileNumber" | "nic" | "incidentDate";
 
-export interface SearchFilters {
-  type: FilterType;
-  value: string;
+export interface SearchQuery {
+  filterType: FilterType;
+  searchValue: string;
 }
 
 export interface SearchResult {

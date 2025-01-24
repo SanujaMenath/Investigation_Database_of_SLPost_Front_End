@@ -1,61 +1,44 @@
-import { useState } from "react";
-import { SearchFilters, SearchResult } from "../@types/search";
-import { baseUrl, getAuthToken } from "./authService";
+import { APIResponse } from "../@types/api";
+import { SearchQuery, SearchResult } from "../@types/search";
+import { API_PREFIX } from "../constants";
+import { getCommonHeaders } from "../utils/request";
+import { getAuthHeaders } from "./authService";
 
-export const useSearch = () => {
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState<SearchFilters | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const performSearch = async () => {
-    if (!filters?.type || !filters?.value) {
-      setError("Filters are invalid or incomplete.");
-      return;
-    }
-    console.log("Filters before search:", filters);
-
-    setLoading(true);
-    setError(null);
-
+export const SearchService = {
+  search: async (query: SearchQuery): Promise<APIResponse<SearchResult[]>> => {
     try {
-      const authToken = getAuthToken();
-      const url = new URL(`${baseUrl}/api/investigations/search`);
-      url.searchParams.append("filterType", filters.type);
-      url.searchParams.append("filterValue", filters.value);
+      // Query filtering
+      const { filterType, searchValue } = query;
+      const endpoint =
+        filterType === "fileNumber"
+          ? `${API_PREFIX}/investigations/search?value=${searchValue}`
+          : filterType === "nic"
+          ? `${API_PREFIX}/investigation-suspectors/search?value=${searchValue}`
+          : `${API_PREFIX}/investigations/search?value=${searchValue}`;
 
-      const response = await fetch(url.toString(), {
-        method: "GET",
+      const response = await fetch(endpoint, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
+          ...getCommonHeaders(),
+          ...getAuthHeaders(),
         },
+        method: "GET",
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch results.");
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
 
-      const data = await response.json();
-      if (!Array.isArray(data)) throw new Error("Invalid response format.");
-
-      setResults(data as SearchResult[]);
-    } catch (err: any) {
-      console.error("Search failed:", err);
-      setError(err.message || "An unknown error occurred.");
-      setResults([]);
-    } finally {
-      setLoading(false);
+      return {
+        success: true,
+        message: "Search fetch success",
+        data: await response.json(),
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        error: "Search fetch failed",
+      };
     }
-  };
-
-  return {
-    results,
-    loading,
-    error,
-    filters,
-    setFilters,
-    performSearch,
-  };
+  },
 };
