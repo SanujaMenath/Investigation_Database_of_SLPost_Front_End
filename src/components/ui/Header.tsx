@@ -7,7 +7,7 @@ const Header = () => {
     <>
       <div className="mt-3 border-b-2 border-solid border-indigo-300">
       <img
-        src="https://slpost.gov.lk/wp-content/uploads/2019/10/DOP_header.png"
+        src="http://slpost.gov.lk/wp-content/uploads/2019/10/DOP_header.png"
         alt="Department of Posts"
         className="mx-auto "
       />
