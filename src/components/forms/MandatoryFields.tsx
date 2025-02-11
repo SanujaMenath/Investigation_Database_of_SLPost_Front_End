@@ -1,4 +1,29 @@
-const MandatoryFields = () => {
+import React, { FC, useEffect } from "react";
+
+export type MandatoryFieldsState = {
+  fileNumber: string;
+  incident: string;
+  dateOfIncident: string;
+  dateReferredToInvestigate: string;
+};
+
+type MandatoryFieldsProps = {
+  getMandatoryFields: (mandatoryFields: MandatoryFieldsState) => void;
+};
+
+const MandatoryFields: FC<MandatoryFieldsProps> = ({ getMandatoryFields }) => {
+  const [mandatoryFields, setMandatoryFields] =
+    React.useState<MandatoryFieldsState>({
+      fileNumber: "",
+      incident: "",
+      dateOfIncident: "",
+      dateReferredToInvestigate: "",
+    });
+
+  useEffect(() => {
+    getMandatoryFields(mandatoryFields);
+  }, [mandatoryFields]);
+
   return (
     <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
       <div className="space-y-6">
@@ -25,6 +50,13 @@ const MandatoryFields = () => {
               <input
                 type="text"
                 id="fileId"
+                value={mandatoryFields.fileNumber}
+                onChange={(e) =>
+                  setMandatoryFields({
+                    ...mandatoryFields,
+                    fileNumber: e.target.value,
+                  })
+                }
                 placeholder="Ex: Inv/01"
                 required
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
@@ -43,6 +75,13 @@ const MandatoryFields = () => {
               <input
                 type="text"
                 id="incident"
+                value={mandatoryFields.incident}
+                onChange={(e) =>
+                  setMandatoryFields({
+                    ...mandatoryFields,
+                    incident: e.target.value,
+                  })
+                }
                 placeholder="Ex: Vehicle Accident"
                 required
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
@@ -62,6 +101,13 @@ const MandatoryFields = () => {
               <input
                 type="date"
                 id="incidentDate"
+                value={mandatoryFields.dateOfIncident}
+                onChange={(e) =>
+                  setMandatoryFields({
+                    ...mandatoryFields,
+                    dateOfIncident: e.target.value,
+                  })
+                }
                 required
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                          focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
@@ -80,12 +126,20 @@ const MandatoryFields = () => {
               <input
                 type="date"
                 id="dateReferred"
+                value={mandatoryFields.dateReferredToInvestigate}
+                onChange={(e) =>
+                  setMandatoryFields({
+                    ...mandatoryFields,
+                    dateReferredToInvestigate: e.target.value,
+                  })
+                }
                 required
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                          focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                          transition-colors bg-indigo-50/30"
               />
             </div>
+          </div>
           </div>
         </fieldset>
       </div>
