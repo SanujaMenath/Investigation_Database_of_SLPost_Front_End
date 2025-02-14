@@ -5,6 +5,7 @@ export type MandatoryFieldsState = {
   incident: string;
   dateOfIncident: string;
   dateReferredToInvestigate: string;
+  createdBy: number;
 };
 
 type MandatoryFieldsProps = {
@@ -18,7 +19,18 @@ const MandatoryFields: FC<MandatoryFieldsProps> = ({ getMandatoryFields }) => {
       incident: "",
       dateOfIncident: "",
       dateReferredToInvestigate: "",
+      createdBy:0
     });
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    if (userId) {
+      setMandatoryFields((prev) => ({
+        ...prev,
+        createdBy: parseInt(userId, 10), 
+      }));
+    }
+  }, []);
 
   useEffect(() => {
     getMandatoryFields(mandatoryFields);
@@ -139,7 +151,6 @@ const MandatoryFields: FC<MandatoryFieldsProps> = ({ getMandatoryFields }) => {
                          transition-colors bg-indigo-50/30"
               />
             </div>
-          </div>
           </div>
         </fieldset>
       </div>

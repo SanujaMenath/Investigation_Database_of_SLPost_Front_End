@@ -1,7 +1,7 @@
 import { APIResponse } from "../@types/api";
 import { SearchQuery, SearchResult } from "../@types/search";
 import { API_PREFIX } from "../constants";
-import { getCommonHeaders } from "../utils/request";
+import { getCommonHeaders } from "../utils/requestWrapper";
 import { getAuthHeaders } from "./authService";
 
 export const SearchService = {
