@@ -66,11 +66,6 @@ export const navbar: NavBar[] = [
         url: "/update-charge-sheets",
         accessLevel: ["clerk", "admin"],
       },
-      {
-        name: "Update Investigation Assignments",
-        url: "/update-investigation-assignments",
-        accessLevel: ["clerk", "admin"],
-      },
     ],
   },
   {

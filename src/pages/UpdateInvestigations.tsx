@@ -10,7 +10,7 @@ function UpdateInvestigations() {
     <>
       <Header />
       <div className="flex flex-col items-center min-h-screen bg-indigo-50 py-3 mb-4">
-        <MandatoryFields />
+        <MandatoryFields  />
         <SecondaryFields />
         <div className="mt-4 ">
           <Button variant="soft">Update</Button>

@@ -25,7 +25,7 @@ import InvSuspectsForm, {
 } from "../components/forms/InvSuspectsForm";
 import Header from "../components/ui/Header";
 import { Button } from "@radix-ui/themes";
-import { apiRequest } from "../utils/requestWrapper";
+import { handlePipeline } from "../services/investigationService";
 
 function CreateInvestigation() {
   const [mandatoryFields, setMandatoryFields] =
@@ -33,6 +33,7 @@ function CreateInvestigation() {
   const [secondaryFields, setSecondaryFields] =
     useState<SecondaryFieldsState>();
   const [interimReport, setInterimReport] = useState<InterimReportState>();
+
   const [chargeSheet, setChargeSheet] = useState<ChargeSheetFormState>();
   const [formalInquiry, setFormalInquiry] = useState<FormalInquiryFormState>();
   const [suspectorDetails, setSuspectorDetails] =
@@ -43,41 +44,9 @@ function CreateInvestigation() {
 
   // 🔹 Updated: Using an array of objects with unique IDs
   const [interimReports, setInterimReports] = useState<{ id: string }[]>([]);
-
-  const handlePipeline = async () => {
-    try {
-      // Queue starts here
-      // 1
-      await apiRequest.PostRequest({
-        relativeUrl: "/investigations/create",
-        body: JSON.stringify({
-          fileId: mandatoryFields?.fileNumber,
-          incident: mandatoryFields?.incident,
-          incidentDate: mandatoryFields?.dateOfIncident,
-          dateReferredToInvestigate: mandatoryFields?.dateReferredToInvestigate,
-          createdBy: mandatoryFields?.createdBy,
-          ...secondaryFields,
-        }),
-      });
-      // 2
-      await apiRequest.PostRequest({
-        relativeUrl: "/interim-report/create",
-        body: JSON.stringify({
-          interimReportId: interimReport?.interimReportId,
-
-        //start from here
-        
-        })
-      });
-      // Parallel
-      // Promise.all([
-      //   await apiRequest,
-      //   await apiRequest,
-      // ]);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [chargeSheets, setChargeSheets] = useState<{ id: string }[]>([]);
+  const [formalInquiries, setFormalInquiries] = useState<{ id: string }[]>([]);
+  console.log("77", chargeSheet);
 
   return (
     <div>
@@ -120,15 +89,85 @@ function CreateInvestigation() {
             Add Interim Report
           </Button>
 
-          <ChargeSheetForm getChargeSheet={(s) => setChargeSheet(s)} />
-          <FormalInquiry getFormalInquiry={(s) => setFormalInquiry(s)} />
+          {/* 🔹 Display all ChargeSheets */}
+          {chargeSheets.map(({ id }) => (
+            <ChargeSheetForm
+              key={id}
+              id={id}
+              getChargeSheet={(s) => setChargeSheet(s)}
+              onRemove={() =>
+                setChargeSheets((prev) =>
+                  prev.filter((report) => report.id !== id)
+                )
+              }
+            />
+          ))}
+
+          {/*  Button to Add ChargeSheet with Unique ID */}
+          <Button
+            onClick={() =>
+              setChargeSheets((prev) => [...prev, { id: crypto.randomUUID() }])
+            }
+            type="button"
+            variant="soft"
+            radius="large"
+          >
+            Add ChargeSheet
+          </Button>
+
+          {/* 🔹 Display all Formal Inquiries */}
+          {formalInquiries.map(({ id }) => (
+            <FormalInquiry
+              key={id}
+              id={id}
+              getFormalInquiry={(s) => setFormalInquiry(s)}
+              onRemove={() =>
+                setFormalInquiries(
+                  (prev) =>
+                    prev?.filter((report) => report.id !== id)
+                )
+              }
+            />
+          ))}
+
+          {/*  Button to Add Formal Inquiry with Unique ID */}
+          <Button
+            onClick={() =>
+              setFormalInquiries((prev) => [
+                ...prev,
+                { id: crypto.randomUUID() },
+              ])
+            }
+            type="button"
+            variant="soft"
+            radius="large"
+          >
+            Add Formal Inquiry
+          </Button>
+
           <CreateSuspector
             getSuspectorDetails={(s) => setSuspectorDetails(s)}
           />
           <IIAssignment getIIAssignment={(s) => setIIAssignment(s)} />
           <InvSuspectsForm getInvSuspectsForm={(s) => setInvSuspectsForm(s)} />
 
-          <Button onClick={handlePipeline}>Save</Button>
+          {/* Pass all states to the service function */}
+          <Button
+            onClick={async () => {
+              await handlePipeline(
+                mandatoryFields,
+                secondaryFields,
+                interimReport,
+                chargeSheet,
+                formalInquiry,
+                suspectorDetails,
+                iiAssignment,
+                invSuspectsForm
+              );
+            }}
+          >
+            Save
+          </Button>
         </form>
       </div>
     </div>

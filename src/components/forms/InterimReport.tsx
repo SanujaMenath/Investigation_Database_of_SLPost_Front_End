@@ -19,7 +19,8 @@ type InterimReportProps = {
   onRemove?: (id: string) => void;
 };
 
-const InterimReport: FC<InterimReportProps> = ({
+const 
+InterimReport: FC<InterimReportProps> = ({
   getInterimReport,
   onRemove,
   id,

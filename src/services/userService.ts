@@ -1,8 +1,9 @@
-import { baseUrl } from "./authService";
+import { API_PREFIX } from "../constants";
+
 
 export const createUser = async (data: any) => {
     try {  
-      const response = await fetch(`${baseUrl}/api/user`, {
+      const response = await fetch(`${API_PREFIX}/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
