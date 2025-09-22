@@ -1,61 +1,42 @@
-import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import Root from "./pages/Root";
-import Home from "./pages/Home";
-import Investigation from "./pages/Investigation";
-import Search from "./pages/Search";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Contact from "./pages/Contact";
-import UpdateInv from "./pages/UpdateInv";
-import UpdateInterimReport from "./pages/UpdateInterimReport";
-import InvestigationInspector from "./pages/InvestigationInspector";
-import NewUser from "./pages/NewUser";
-import UpdateChargeSheet from "./pages/UpdateChargeSheet";
-import UpdateFormalInquiry from "./pages/UpdateFormalInquiry";
+import Home from "./pages/Home";
+import CreateInvestigation from "./pages/CreateInvestigation";
+import UpdateInvestigations from "./pages/UpdateInvestigations";
+import ProtectedRoute from "./components/ProtectedRoute";
+import CreateNewUser from "./components/forms/CreateUser";
+import AdvancedSearch from "./pages/AdvancedSearch";
+import DetailedReport from "./pages/DetailedReport";
+import CreateInvInspector from "./components/forms/CreateInvInpector";
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Root />,
-      children: [
-        { index: true, element: <Home /> },
-        { path: "/new-investigation", element: <Investigation /> },
-        { path: "/update-investigation", element: <UpdateInv /> },
-        {
-          path: "/update-investigation/update-interim-report",
-          element: <UpdateInterimReport />,
-        },
-        {
-          path: "/new-investigation/inv-Inspector",
-          element: <InvestigationInspector />,
-        },
-        {
-            path: "/new-investigation/create-New-User",
-            element: <NewUser />,
-          },
-          {
-            path: "/update-investigation/update-Charge-Sheet",
-            element: <UpdateChargeSheet />,
-          },
-          {
-            path: "/update-investigation/update-formal-inquiry",
-            element: <UpdateFormalInquiry />,
-          },
-        { path: "/search", element: <Search /> },
-        { path: "/contact", element: <Contact /> },
-        { path: "/login", element: <Login /> },
-      ],
-    },
-  ]);
-
   return (
-    <React.StrictMode>
-      <main className="font-sans">
-        <RouterProvider router={router} />
-      </main>
-    </React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/create-investigation"
+            element={<CreateInvestigation />}
+          />
+          <Route
+            path="/update-investigations"
+            element={<UpdateInvestigations />}
+          />
+          <Route path="/update-investigation-assignments" element={<Login />} />
+          <Route path="/update-suspectors" element={<Login />} />
+          <Route path="/create-investigation-inspector" element={<CreateInvInspector />} />
+          <Route path="/update-formal-inquiries" element={<Login />} />
+          <Route path="/update-interim-reports" element={<Login />} />
+          <Route path="/update-charge-sheets" element={<Login />} />
+          <Route path="/advanced-search" element={<AdvancedSearch />} />
+          <Route path="/detailed-reports" element={<DetailedReport />} />
+          <Route path="/create-user" element={<CreateNewUser />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
