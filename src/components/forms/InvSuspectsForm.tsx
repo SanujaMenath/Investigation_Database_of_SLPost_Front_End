@@ -1,4 +1,34 @@
-const InvSuspectsForm = () => {
+import React, { FC, useEffect } from "react";
+
+export type InvSuspectsFormState = {
+  suspectorNic: string;
+  interdictedDate: string;
+  dateOfAppealForReinstate: string;
+  appealedAcceptedOrRejected: boolean;
+  dateOfRestateForAppealed: string;
+  dateOfFinalOrderThatInformedToAccused: string;
+  restatedDate: string;
+};
+
+type InvSuspectsFormProps = {
+  getInvSuspectsForm: (data: InvSuspectsFormState) => void;
+};
+
+const InvSuspectsForm: FC<InvSuspectsFormProps> = ({ getInvSuspectsForm }) => {
+  const [invSuspectsForm, setInvSuspectsForm] = React.useState<InvSuspectsFormState>({
+    suspectorNic: "",
+    interdictedDate: "",
+    dateOfAppealForReinstate: "",
+    appealedAcceptedOrRejected: false,
+    dateOfRestateForAppealed: "",
+    dateOfFinalOrderThatInformedToAccused: "",
+    restatedDate: "",
+  });
+
+  useEffect(() => {
+    getInvSuspectsForm(invSuspectsForm);
+  }, [invSuspectsForm]);
+
   return (
     <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
       <div className="space-y-6">
@@ -46,6 +76,8 @@ const InvSuspectsForm = () => {
             <input
               type="date"
               id="interdictedDate"
+              value={invSuspectsForm.interdictedDate}
+              onChange={(e) => setInvSuspectsForm({ ...invSuspectsForm, interdictedDate: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
@@ -58,11 +90,13 @@ const InvSuspectsForm = () => {
               htmlFor="dateOfAppealedForReinstate"
               className="block text-sm font-medium text-indigo-700"
             >
-              Date of Appealed for Reinstate{" "}
+              Date of Appealed for Reinstate
             </label>
             <input
               type="date"
               id="dateOfAppealedForReinstate"
+              value={invSuspectsForm.dateOfAppealForReinstate}
+              onChange={(e) => setInvSuspectsForm({ ...invSuspectsForm, dateOfAppealForReinstate: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
@@ -79,6 +113,7 @@ const InvSuspectsForm = () => {
             </label>
             <select
               id="appealedAcceptedOrRejected"
+             
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30 text-indigo-700"
@@ -86,7 +121,7 @@ const InvSuspectsForm = () => {
               <option value="" disabled selected>
                 Appealed Accepted Or Rejected
               </option>
-              <option value="accepted">Accepted</option>
+              <option value="true">Accepted</option>
               <option value="rejected">Rejected</option>
             </select>
           </div>
@@ -97,7 +132,7 @@ const InvSuspectsForm = () => {
               htmlFor="dateOfRestateForAppealed"
               className="block text-sm font-medium text-indigo-700"
             >
-              Date of Restate for Appealed{" "}
+              Date of Restate for Appealed
             </label>
             <input
               type="date"

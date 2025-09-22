@@ -1,3 +1,5 @@
+import React from 'react'
+import Chargesheet from '../components/forms/ChargesheetForm'
 import { Button } from "@radix-ui/themes";
 import MandatoryFields from "../components/forms/MandatoryFields";
 import SecondaryFields from "../components/forms/SecondaryFields";
@@ -8,7 +10,7 @@ function UpdateInvestigations() {
     <>
       <Header />
       <div className="flex flex-col items-center min-h-screen bg-indigo-50 py-3 mb-4">
-        <MandatoryFields />
+        <MandatoryFields  />
         <SecondaryFields />
         <div className="mt-4 ">
           <Button variant="soft">Update</Button>

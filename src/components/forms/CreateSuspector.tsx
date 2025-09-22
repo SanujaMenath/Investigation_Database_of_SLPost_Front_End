@@ -1,5 +1,26 @@
+import React, { FC, useEffect } from "react";
 
-const CreateSuspector = () => {
+export type CreateSuspectorState = {
+  name: string;
+  nic: string;
+  dateOfBirth: string;
+};
+
+type CreateSuspectorProps = {
+  getSuspectorDetails: (data: CreateSuspectorState) => void;
+}
+
+const CreateSuspector: FC<CreateSuspectorProps> = ({ getSuspectorDetails }) => {
+  const [suspectorDetails, setSuspectorDetails] = React.useState<CreateSuspectorState>({
+    name: "",
+    nic: "",
+    dateOfBirth: "",
+  });
+
+  useEffect(() => {
+    getSuspectorDetails(suspectorDetails);
+  }, [suspectorDetails]);
+  
   return (
     <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
       <div className="space-y-6">
@@ -25,6 +46,8 @@ const CreateSuspector = () => {
             <input
               id="name"
               type="text"
+              value={suspectorDetails.name}
+              onChange={(e) => setSuspectorDetails({ ...suspectorDetails, name: e.target.value })}
               required
               placeholder="Enter full name"
               className="w-2/3 px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
@@ -44,6 +67,8 @@ const CreateSuspector = () => {
             <input
               id="nic"
               type="text"
+              value={suspectorDetails.nic}
+              onChange={(e) => setSuspectorDetails({ ...suspectorDetails, nic: e.target.value })}
               required
               placeholder="Ex: 999999999V"
               className="w-2/3 px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
@@ -63,6 +88,8 @@ const CreateSuspector = () => {
             <input
               id="dob"
               type="date"
+              value={suspectorDetails.dateOfBirth}
+              onChange={(e) => setSuspectorDetails({ ...suspectorDetails, dateOfBirth: e.target.value })}
               required
               className="w-2/3 px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 

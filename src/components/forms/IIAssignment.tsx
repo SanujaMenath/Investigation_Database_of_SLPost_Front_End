@@ -1,6 +1,32 @@
 import { Button } from "@radix-ui/themes";
+import React, { FC, useEffect } from "react";
 
-function IIAssignment() {
+export type IIAssignmentState = {
+  invInspectorNic: string;
+  caseNumber: string;
+  acquiredDate: string;
+  submittedDate: string;
+  reacquiredDate: string;
+  resubmittedDate: string;
+};
+type IIAssignmentProps = {
+  getIIAssignment: (data: IIAssignmentState) => void;
+};
+
+const IIAssignment: FC<IIAssignmentProps> = ({ getIIAssignment }) => {
+  const [iiAssignment, setIIAssignment] = React.useState<IIAssignmentState>({
+    invInspectorNic: "",
+    caseNumber: "",
+    acquiredDate: "",
+    submittedDate: "",
+    reacquiredDate: "",
+    resubmittedDate: "",
+  });
+
+  useEffect(() => {
+    getIIAssignment(iiAssignment);
+  }, [iiAssignment]);
+
   return (
     <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
       <div className="space-y-6">
@@ -25,6 +51,13 @@ function IIAssignment() {
             </label>
             <select
               id="selectInspector"
+              value={iiAssignment.invInspectorNic}
+              onChange={(e) =>
+                setIIAssignment({
+                  ...iiAssignment,
+                  invInspectorNic: e.target.value,
+                })
+              }
               className="w-2/3 px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                      transition-colors bg-indigo-50/30 text-indigo-700"
@@ -63,6 +96,8 @@ function IIAssignment() {
             <input
               id="caseNumber"
               type="text"
+              value={iiAssignment.caseNumber}
+              onChange={(e) => setIIAssignment({ ...iiAssignment, caseNumber: e.target.value })}
               placeholder="Enter case number"
               className="w-2/3 px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
@@ -82,11 +117,18 @@ function IIAssignment() {
                 htmlFor={field.id}
                 className="w-1/3 text-sm font-medium text-indigo-700"
               >
-                {field.label} 
+                {field.label}
               </label>
               <input
                 type="date"
                 id={field.id}
+                value={iiAssignment[field.id as keyof IIAssignmentState]}
+                onChange={(e) =>
+                  setIIAssignment({
+                    ...iiAssignment,
+                    [field.id]: e.target.value,
+                  })
+                }
                 className="w-2/3 px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
@@ -118,6 +160,6 @@ function IIAssignment() {
       </div>
     </div>
   );
-}
+};
 
 export default IIAssignment;

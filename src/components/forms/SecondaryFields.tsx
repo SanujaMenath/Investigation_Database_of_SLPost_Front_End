@@ -1,5 +1,34 @@
+import React, { FC, useEffect } from "react";
 
-const SecondaryFields = () => {
+export type SecondaryFieldsState = {
+  reccomendationOfFinalReport: string;
+  personWhoAcceptedSubmission: string;
+  dateOfAcceptance: string;
+  handOveredDateOfSubmission: string;
+  dateOfFinalReportIssued: string;
+  divisionId: string;
+  status: string;
+}
+
+  type SecondaryFieldsProps = {
+   getSecondaryFields: (secondaryFields: SecondaryFieldsState) => void
+  }
+
+  const SecondaryFields: FC<SecondaryFieldsProps> = ({ getSecondaryFields }) => {
+    const [secondaryFields, setSecondaryFields] = React.useState<SecondaryFieldsState>({
+    reccomendationOfFinalReport: "",
+    personWhoAcceptedSubmission: "",
+    dateOfAcceptance: "",
+    handOveredDateOfSubmission: "",
+    dateOfFinalReportIssued: "",
+    divisionId: "",
+    status: "",
+    });
+
+    useEffect(() => {
+      getSecondaryFields(secondaryFields);
+    }, [secondaryFields]);
+   
   return (
     <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
       <div className="space-y-6">
@@ -24,6 +53,8 @@ const SecondaryFields = () => {
           <textarea
             id="recommendation"
             rows={3}
+            value={secondaryFields.reccomendationOfFinalReport}
+            onChange={(e) => setSecondaryFields({ ...secondaryFields, reccomendationOfFinalReport: e.target.value })}
             className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                      transition-colors bg-indigo-50/30 placeholder-indigo-300 resize-none"
@@ -44,6 +75,8 @@ const SecondaryFields = () => {
             <input
               type="text"
               id="acceptedBy"
+              value={secondaryFields.personWhoAcceptedSubmission}
+              onChange={(e) => setSecondaryFields({ ...secondaryFields, personWhoAcceptedSubmission: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30 placeholder-indigo-300"
@@ -62,6 +95,8 @@ const SecondaryFields = () => {
             <input
               type="date"
               id="acceptedDate"
+              value={secondaryFields.dateOfAcceptance}
+              onChange={(e) => setSecondaryFields({ ...secondaryFields, dateOfAcceptance: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
@@ -79,6 +114,8 @@ const SecondaryFields = () => {
             <input
               type="date"
               id="handOveredDate"
+              value={secondaryFields.handOveredDateOfSubmission}
+              onChange={(e) => setSecondaryFields({ ...secondaryFields, handOveredDateOfSubmission: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
@@ -96,6 +133,8 @@ const SecondaryFields = () => {
             <input
               type="date"
               id="finalReportDate"
+              value={secondaryFields.dateOfFinalReportIssued}
+              onChange={(e) => setSecondaryFields({ ...secondaryFields, dateOfFinalReportIssued: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
@@ -112,13 +151,15 @@ const SecondaryFields = () => {
             </label>
             <select
               id="division"
+              value={secondaryFields.divisionId}
+              onChange={(e) => setSecondaryFields({ ...secondaryFields, divisionId: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
             >
               <option value="">Select division</option>
-              <option value="division1">Division 1</option>
-              <option value="division2">Division 2</option>
+              <option value="1">Division 1</option>
+              <option value="2">Division 2</option>
             </select>
           </div>
 
@@ -132,6 +173,8 @@ const SecondaryFields = () => {
             </label>
             <select
               id="status"
+              value={secondaryFields.status}
+              onChange={(e) => setSecondaryFields({ ...secondaryFields, status: e.target.value })}
               className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                        transition-colors bg-indigo-50/30"
@@ -147,5 +190,6 @@ const SecondaryFields = () => {
     </div>
   );
 };
+
 
 export default SecondaryFields;

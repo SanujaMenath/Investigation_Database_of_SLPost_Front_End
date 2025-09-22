@@ -1,11 +1,56 @@
-const FormalInquiryForm = () => {
+import React, { FC, useEffect } from "react";
+
+export type FormalInquiryFormState = {
+  dateOfAppoint: string;
+  startedDate: string;
+  endDate: string;
+  dateOfRecommendation: string;
+  recommendationOfIO: string;
+};
+
+type FormalInquiryFormProps = {
+  id: string;
+  getFormalInquiry: (formalInquiry: FormalInquiryFormState) => void;
+  onRemove?: (id: string) => void;
+};
+const FormalInquiryForm: FC<FormalInquiryFormProps> = ({
+  getFormalInquiry,
+  onRemove,
+  id,
+}) => {
+  const [formalInquiry, setFormalInquiry] =
+    React.useState<FormalInquiryFormState>({
+      dateOfAppoint: "",
+      startedDate: "",
+      endDate: "",
+      dateOfRecommendation: "",
+      recommendationOfIO: "",
+    });
+
+  useEffect(() => {
+    getFormalInquiry(formalInquiry);
+  }, [formalInquiry]);
+
   return (
     <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 border border-indigo-100">
       <div className="space-y-6">
+
+         {/* Delete Button */}
+         <button
+          type="button"
+          className="absolute bg-indigo-50 px-1 rounded-[5px] font-semibold top-2 right-2 text-red-500 hover:text-red-700"
+          title="Delete Report"
+          onClick={() => {
+            if (onRemove) onRemove(id);
+          }}
+        >
+          ✕
+        </button>
+
         {/* Section Header */}
         <div className="border-b border-indigo-100 pb-4">
           <h2 className="text-xl font-semibold text-indigo-900">
-            Formal Inquiry Details
+            Formal Inquiry Details {id}
           </h2>
           <p className="mt-1 text-sm text-indigo-600">
             Please fill in all appointment and investigation details
@@ -25,6 +70,13 @@ const FormalInquiryForm = () => {
               <input
                 type="date"
                 id="dateOfAppoint"
+                value={formalInquiry.dateOfAppoint}
+                onChange={(e) =>
+                  setFormalInquiry({
+                    ...formalInquiry,
+                    dateOfAppoint: e.target.value,
+                  })
+                }
                 required
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                          focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
@@ -42,6 +94,13 @@ const FormalInquiryForm = () => {
               <input
                 type="date"
                 id="startedDate"
+                value={formalInquiry.startedDate}
+                onChange={(e) =>
+                  setFormalInquiry({
+                    ...formalInquiry,
+                    startedDate: e.target.value,
+                  })
+                }
                 required
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                          focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
@@ -55,11 +114,18 @@ const FormalInquiryForm = () => {
                 htmlFor="endDate"
                 className="block text-sm font-medium text-indigo-700 mb-2"
               >
-                End Date <span className="text-red-500">*</span>
+                End Date
               </label>
               <input
                 type="date"
                 id="endDate"
+                value={formalInquiry.endDate}
+                onChange={(e) =>
+                  setFormalInquiry({
+                    ...formalInquiry,
+                    endDate: e.target.value,
+                  })
+                }
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                          focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                          transition-colors bg-indigo-50/30"
@@ -71,11 +137,18 @@ const FormalInquiryForm = () => {
                 htmlFor="dateOfRecommendation"
                 className="block text-sm font-medium text-indigo-700 mb-2"
               >
-                Date Of Recommendation <span className="text-red-500">*</span>
+                Date Of Recommendation
               </label>
               <input
                 type="date"
                 id="dateOfRecommendation"
+                value={formalInquiry.dateOfRecommendation}
+                onChange={(e) =>
+                  setFormalInquiry({
+                    ...formalInquiry,
+                    dateOfRecommendation: e.target.value,
+                  })
+                }
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                          focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                          transition-colors bg-indigo-50/30"
@@ -88,18 +161,23 @@ const FormalInquiryForm = () => {
                 htmlFor="recommendation"
                 className="block text-sm font-medium text-indigo-700 mb-2"
               >
-                Recommendation Of Investigation Officer{" "}
-                <span className="text-red-500">*</span>
+                Recommendation Of Investigation Officer
               </label>
               <textarea
                 id="recommendation"
+                value={formalInquiry.recommendationOfIO}
+                onChange={(e) =>
+                  setFormalInquiry({
+                    ...formalInquiry,
+                    recommendationOfIO: e.target.value,
+                  })
+                }
                 placeholder="Enter your recommendation here"
                 rows={3}
                 className="w-full px-4 py-2 border border-indigo-200 rounded-md shadow-sm 
                          focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
                          transition-colors bg-indigo-50/30 placeholder-indigo-300
                          resize-none"
-                required
               />
             </div>
           </div>
